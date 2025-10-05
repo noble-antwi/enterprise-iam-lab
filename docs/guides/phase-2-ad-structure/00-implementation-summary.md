@@ -82,10 +82,8 @@ foreach ($OU in $OUs) {
 
 The script successfully created all 20 organizational units in the correct hierarchical structure.
 
-**Location:** `assets/images/screenshots/phase-2/01-ou-structure-complete.png`
-
-![Active Directory OU Hierarchy](../../../assets/images/screenshots/phase-2/01-ou-structure-complete.png)
-*Figure 1: Complete BIIRA organizational unit hierarchy in Active Directory Users and Computers, showing all 20 OUs including Users (with departmental sub-OUs), Groups, Computers, and Admin tiers. The structure demonstrates proper isolation from default AD containers and supports scalable enterprise organization.*
+![Active Directory OU Hierarchy](<../../../assets/images/screenshots/phase-2/2. OU Creation Confirmation.png>)
+*Figure 1: Complete BIIRA organizational unit hierarchy in Active Directory Users and Computers*
 
 ---
 
@@ -144,9 +142,7 @@ These groups provide the foundation for RBAC, resource permissions, and applicat
 
 All security groups were successfully created and organized within the SecurityGroups OU.
 
-**Location:** `assets/images/screenshots/phase-2/02-okta-security-groups.png`
-
-![Security Groups in Active Directory](../../../assets/images/screenshots/phase-2/02-okta-security-groups.png)
+![Security Groups in Active Directory](<../../../assets/images/screenshots/phase-2/6. Groups Created.png>)
 *Figure 2: SecurityGroups OU displaying all 9 security groups - 3 OKTA integration groups (SG-OKTA-AllUsers, SG-OKTA-Admins, SG-OKTA-MFA-Exempt) and 6 department access groups (SG-Dept-Executive, Finance, HR, IT, Marketing, Sales). Each group includes descriptive metadata for administrative clarity.*
 
 ---
@@ -159,7 +155,7 @@ I implemented a CSV-based bulk user provisioning process to efficiently create 2
 
 **CSV Source File: biira_employees.csv**
 
-Location: `C:\Users\scripts\biira_employees.csv`
+Location: `assets/csv/biira_employees.csv` "[csv](../../../assets/csv/biira_employees.csv)"
 
 ```csv
 FirstName,LastName,Department,Title,Email
@@ -189,7 +185,7 @@ foreach ($user in $users) {
                -Title $user.Title `
                -Department $user.Department `
                -Path $ou `
-               -AccountPassword (ConvertTo-SecureString "Welcome2Biira!" -AsPlainText -Force) `
+               -AccountPassword (ConvertTo-SecureString "Removed it" -AsPlainText -Force) `
                -Enabled $true
     
     # Automatic group membership
@@ -209,9 +205,7 @@ foreach ($user in $users) {
 
 The script successfully created 25 users from the CSV file, automatically placing them in the correct departmental OUs and assigning appropriate group memberships.
 
-**Location:** `assets/images/screenshots/phase-2/03-bulk-user-creation.png`
-
-![PowerShell Bulk User Creation](../../../assets/images/screenshots/phase-2/03-bulk-user-creation.png)
+![PowerShell Bulk User Creation](<../../../assets/images/screenshots/phase-2/1. Bulk User Creation.png>)
 *Figure 3: PowerShell script execution output showing successful creation of 25 users from CSV file. Each user was automatically placed in their department OU and added to both SG-OKTA-AllUsers and their department security group. Summary displays 27 total users in SG-OKTA-AllUsers (25 from bulk import + 2 manually created) distributed across 6 departments: Executive (4), Finance (5), HR (3), IT (6), Marketing (4), Sales (5).*
 
 ---
@@ -231,7 +225,7 @@ New-ADUser -Name "svc-okta-agent" `
            -DisplayName "OKTA AD Agent Service Account" `
            -Description "Service account for OKTA AD synchronization" `
            -Path "OU=ServiceAccounts,OU=Users,OU=BIIRA,$domainDN" `
-           -AccountPassword (ConvertTo-SecureString "ComplexP@ss123!" -AsPlainText -Force) `
+           -AccountPassword (ConvertTo-SecureString "I removed it" -AsPlainText -Force) `
            -Enabled $true `
            -PasswordNeverExpires $true `
            -CannotChangePassword $true
@@ -243,9 +237,8 @@ New-ADUser -Name "svc-okta-agent" `
 - **Isolated OU:** Separated from regular users for distinct GPO application
 - **Excluded from OKTA sync:** Not a member of `SG-OKTA-AllUsers` - stays local to AD
 
-**Location:** `assets/images/screenshots/phase-2/06-svc-okta-agent.png`
+![Service Account Properties](<../../../assets/images/screenshots/phase-2/7. OKTA Service Account.png>)
 
-![Service Account Properties](../../../assets/images/screenshots/phase-2/06-svc-okta-agent.png)
 *Figure 4: OKTA AD Agent service account (svc-okta-agent) properties showing critical security settings. Account tab displays "Password never expires" and "User cannot change password" options enabled, ensuring stable authentication for OKTA AD Agent. The account is located in the ServiceAccounts OU, isolated from regular user accounts for distinct policy application.*
 
 ---
@@ -256,18 +249,14 @@ New-ADUser -Name "svc-okta-agent" `
 
 With all users provisioned, I verified that the OKTA sync scope is properly configured. The SG-OKTA-AllUsers group now contains all 27 employee accounts, ready for OKTA AD Agent synchronization.
 
-**Location:** `assets/images/screenshots/phase-2/04-okta-allusers-members.png`
-
-![SG-OKTA-AllUsers Group Membership](../../../assets/images/screenshots/phase-2/04-okta-allusers-members.png)
+![SG-OKTA-AllUsers Group Membershipt](<../../../assets/images/screenshots/phase-2/11. SG-OkTA-AllUsers.png>)
 *Figure 5: SG-OKTA-AllUsers security group Members tab showing all 27 user accounts ready for OKTA synchronization. The member list includes users from all departments (Executive, Finance, HR, IT, Marketing, Sales), each with their @biira.online email address configured. The service account (svc-okta-agent) is correctly excluded from this group, preventing unnecessary cloud provisioning.*
 
 ### User Attribute Configuration
 
 All users were provisioned with complete attributes required for OKTA synchronization:
 
-**Location:** `assets/images/screenshots/phase-2/05-user-upn-verification.png`
-
-![User Account Configuration](../../../assets/images/screenshots/phase-2/05-user-upn-verification.png)
+![User Account Configuration](<../../../assets/images/screenshots/phase-2/9. John Smith in the IT Departmtnet.png>)
 *Figure 6: Sample user account (John Smith) properties displaying the Account tab. The critical configuration shows UserPrincipalName set to john.smith@biira.online and Email address matching the UPN. This @biira.online suffix (not @ad.biira.online) is essential for OKTA integration - it serves as the login identifier in OKTA and matches the organization's public domain for a professional SSO experience.*
 
 **Key Attributes Configured:**
@@ -503,7 +492,3 @@ The environment is now ready for OKTA AD Agent deployment and directory synchron
 - **Automation Scripts:** 4 PowerShell scripts developed
 - **Documentation:** Complete implementation guide with validation procedures
 - **Status:** Phase 2 Complete 
-
-**Author:** Noble W. Antwi  
-**Implementation Date:** October 2025  
-**Next Phase:** OKTA AD Agent Installation & Directory Synchronization
