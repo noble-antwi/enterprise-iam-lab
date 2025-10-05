@@ -57,6 +57,8 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 └─────────────────────────────────────────────────────────────┘
 ```
 
+![Architectural DIagram](<assets/images/Architectural Diagram/ArchitecturalDiagram.png>)
+
 ### Domain Architecture: The Two Domains Explained
 
 | Aspect | `ad.biira.online` | `biira.online` |
