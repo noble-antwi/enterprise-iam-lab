@@ -1,134 +1,279 @@
-# Enterprise IAM Lab
+# Enterprise IAM Lab: Hybrid Identity Architecture
 
-> A comprehensive hands-on implementation of enterprise-grade Identity and Access Management solutions, designed to demonstrate real-world skills and best practices.
+> **Building production-ready Identity and Access Management skills through hands-on implementation**  
+> A comprehensive homelab demonstrating enterprise-grade IAM integration using Active Directory, OKTA, and Microsoft Entra ID
 
-## Project Overview
-
-This repository documents my journey building a production-ready IAM infrastructure from scratch. The project simulates a medium-enterprise environment (500-1000 users) and implements industry-standard identity management practices using Microsoft technologies with future multi-vendor integration.
-
-**Target Audience:** IT professionals, system administrators, and security engineers looking to understand enterprise IAM implementation.
-
-## Architecture
-
-The lab environment implements a hybrid identity architecture connecting on-premises and cloud infrastructure:
-
-- **On-Premises**: Windows Server 2022 Active Directory Domain Services
-- **Cloud Identity**: Microsoft Entra ID (Azure Active Directory)  
-- **Hybrid Connectivity**: Azure AD Connect with seamless SSO
-- **Security Layer**: Conditional Access, MFA, and Privileged Identity Management
-- **Future Integration**: OKTA Universal Directory and adaptive authentication
-
-## Technology Stack
-
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Identity Directory** | Windows Active Directory | On-premises user and computer management |
-| **Cloud Identity** | Microsoft Entra ID | Cloud-based identity and access management |
-| **Hybrid Sync** | Azure AD Connect | Directory synchronization and SSO |
-| **Infrastructure** | Azure, VMware | Cloud and virtualized infrastructure |
-| **Automation** | PowerShell, Azure CLI | Infrastructure as Code and administration |
-| **Documentation** | Markdown, Diagrams | Comprehensive implementation guides |
-
-## Implementation Phases
-
-### Phase 1: Foundation Setup (In Progress)
-- [x] Environment planning and architecture design
-- [ ] Azure subscription and Entra ID tenant provisioning
-- [ ] Windows Server 2022 domain controller deployment
-- [ ] Basic Active Directory configuration
-
-### Phase 2: Identity Services (Planned)
-- [ ] User and group management implementation
-- [ ] Group Policy configuration and security hardening
-- [ ] Certificate Services deployment
-- [ ] DNS and networking optimization
-
-### Phase 3: Cloud Integration (Planned)
-- [ ] Azure AD Connect installation and configuration
-- [ ] Directory synchronization and attribute mapping
-- [ ] Seamless Single Sign-On implementation
-- [ ] Hybrid device management
-
-### Phase 4: Security Implementation (Planned)
-- [ ] Multi-Factor Authentication deployment
-- [ ] Conditional Access policy configuration
-- [ ] Privileged Identity Management setup
-- [ ] Identity Protection and risk management
-
-### Phase 5: Governance & Compliance (Planned)
-- [ ] Access reviews and certification
-- [ ] Entitlement management
-- [ ] Audit logging and monitoring
-- [ ] Compliance reporting
-
-### Phase 6: Advanced Integration (Future)
-- [ ] OKTA Universal Directory integration
-- [ ] API management and automation
-- [ ] Cross-platform identity federation
-- [ ] Advanced security analytics
-
-## Documentation Structure
-
-This repository follows enterprise documentation standards:
-
-```
-├── docs/setup-guides/     # Step-by-step implementation guides
-├── docs/architecture/     # System design and decision records  
-├── scripts/              # PowerShell automation and utilities
-├── infrastructure/       # Azure templates and Terraform configs
-├── configs/             # Policy templates and configurations
-└── labs/               # Hands-on exercises and validation tests
-```
-
-## Learning Objectives
-
-By following this project, you will gain practical experience in:
-
-- **Enterprise Identity Architecture**: Design and implement scalable identity solutions
-- **Hybrid Identity Management**: Connect on-premises and cloud directories seamlessly
-- **Security Best Practices**: Implement defense-in-depth for identity systems
-- **Automation & IaC**: Automate deployment and management tasks
-- **Compliance & Governance**: Meet enterprise security and audit requirements
-- **Troubleshooting**: Diagnose and resolve complex identity issues
-
-## How to Use This Repository
-
-1. **Follow the Documentation**: Start with `docs/setup-guides/` for step-by-step instructions
-2. **Use the Scripts**: PowerShell scripts automate repetitive tasks and configurations
-3. **Deploy Infrastructure**: Use templates in `infrastructure/` for consistent deployments
-4. **Practice with Labs**: Complete exercises in `labs/` to reinforce learning
-5. **Adapt for Your Environment**: Modify configurations for your specific requirements
-
-## Current Status
-
-**Phase 1: Foundation Setup (In Progress)**
-
-- [x] Architecture planning and requirements analysis
-- [x] Repository structure and documentation framework  
-- [ ] Azure environment provisioning
-- [ ] On-premises infrastructure deployment
-
-**Latest Update:** Initial repository setup and architecture documentation completed.
-
-## Contributing
-
-This is a learning project, but feedback and suggestions are welcome! If you:
-- Find errors in documentation or scripts
-- Have suggestions for improvements
-- Want to share alternative approaches
-
-Please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Resources
-
-- [Microsoft Entra ID Documentation](https://docs.microsoft.com/en-us/azure/active-directory/)
-- [Windows Server Active Directory](https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/)
-- [Azure AD Connect Documentation](https://docs.microsoft.com/en-us/azure/active-directory/hybrid/)
+[![Lab Status](https://img.shields.io/badge/Status-Phase%202%20In%20Progress-yellow)]()
+[![AD Domain](https://img.shields.io/badge/AD%20Domain-ad.biira.online-blue)]()
+[![OKTA](https://img.shields.io/badge/OKTA-Integrator%20Tenant-00297A)]()
 
 ---
 
-*This project represents hands-on learning and practical implementation of enterprise IAM solutions. All configurations follow Microsoft recommended practices and industry security standards.*
+## Project Vision
+
+This repository chronicles my journey building a **500-1000 user enterprise IAM environment** from scratch. The lab simulates a medium-sized organization's identity infrastructure, implementing industry best practices for hybrid identity, zero-trust security, and modern access management.
+
+**Real-World Application**: Every configuration, script, and architectural decision mirrors production enterprise environments - making this directly applicable to Fortune 500 IAM implementations.
+
+---
+
+## Architecture Overview
+
+### Hybrid Identity Design
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    INTERNET / CLOUD                         │
+│                                                             │
+│  ┌──────────────┐              ┌──────────────────────┐   │
+│  │   OKTA       │◄────────────►│  Microsoft Entra ID  │   │
+│  │  (Primary    │   Federation │    (Azure AD)        │   │
+│  │   IdP)       │              │                      │   │
+│  └──────┬───────┘              └──────────────────────┘   │
+│         │                                                   │
+│         │ OKTA AD Agent                                    │
+│         │ (Secure Tunnel)                                  │
+└─────────┼───────────────────────────────────────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 ON-PREMISES HOMELAB                         │
+│                                                             │
+│  ┌────────────────────────────────────────────────────┐   │
+│  │  Active Directory Domain: ad.biira.online          │   │
+│  │  UPN Suffix: biira.online                          │   │
+│  │                                                    │   │
+│  │  ┌──────────────┐         ┌──────────────────┐   │   │
+│  │  │   srv1       │         │  Future:         │   │   │
+│  │  │  (Domain     │         │  - srv2 (Replica │   │   │
+│  │  │   Controller)│         │    DC)           │   │   │
+│  │  │              │         │  - CA Server     │   │   │
+│  │  │  192.168.50.2│         │  - ADFS (if req) │   │   │
+│  │  └──────────────┘         └──────────────────┘   │   │
+│  │                                                    │   │
+│  └────────────────────────────────────────────────────┘   │
+│                                                             │
+│  Network: 192.168.50.0/24 (Management VLAN)                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Domain Architecture: The Two Domains Explained
+
+| Aspect | `ad.biira.online` | `biira.online` |
+|--------|-------------------|----------------|
+| **Type** | Active Directory Domain (Internal) | UPN Suffix + Public Domain |
+| **Scope** | Homelab network only | Internet-routable |
+| **Purpose** | AD forest root, computer auth | User-facing logins, SSO |
+| **DNS** | Internal DNS on srv1 | Namecheap public DNS |
+| **Example Use** | `AD\jsmith` login on domain PC | `jsmith@biira.online` OKTA login |
+| **Kerberos Realm** | AD.BIIRA.ONLINE | N/A (UPN only) |
+
+**Why This Matters**: This split-brain DNS design is enterprise-standard. Users authenticate with friendly `@biira.online` UPNs while AD internally uses `ad.biira.online`- enabling seamless cloud SSO without exposing internal domain structure.
+
+---
+
+## Technology Stack
+
+### Identity & Directory Services
+| Component | Technology | Status | Purpose |
+|-----------|------------|--------|---------|
+| **On-Prem Directory** | Windows Server 2022 Active Directory |  Deployed | User/computer management, GPOs |
+| **Primary Cloud IdP** | OKTA Universal Directory |  Configured | SSO, MFA, adaptive auth |
+| **Secondary Cloud IdP** | Microsoft Entra ID |  Planned | Microsoft 365, Azure integration |
+| **Directory Sync** | OKTA AD Agent |  Next Phase | Real-time AD→OKTA provisioning |
+
+---
+
+##  Current Implementation Status
+
+### Phase 1: Foundation (COMPLETED)
+- [x] Network design and VLAN segmentation
+- [x] Windows Server 2022 deployment (srv1)
+- [x] Active Directory Domain Services installation
+- [x] Domain promotion: `ad.biira.online`
+- [x] Static IP configuration (192.168.50.2)
+- [x] UPN suffix configuration: `biira.online`
+- [x] AD Domain Trusts configured
+- [x] OKTA Integrator tenant provisioned
+- [x] Custom branding with `biira.online` domain
+- [x] Initial user creation and SSO validation
+
+###  Phase 2: AD Structure & Preparation (IN PROGRESS)
+- [ ] Enterprise OU hierarchy design
+- [ ] Departmental organizational units
+- [ ] Security group structure (role-based access)
+- [ ] Service account creation (OKTA Agent)
+- [ ] Group Policy baseline (password, audit, security)
+- [ ] Bulk user creation (realistic test users)
+- [ ] AD documentation and runbooks
+
+### Phase 3: OKTA Integration (NEXT)
+- [ ] OKTA AD Agent installation
+- [ ] Directory synchronization configuration
+- [ ] Attribute mapping (AD ↔ OKTA)
+- [ ] Group-based provisioning rules
+- [ ] SSO application integration
+- [ ] MFA enforcement policies
+
+### Phase 4: Advanced Security (PLANNED)
+- [ ] Conditional Access policies
+- [ ] Adaptive MFA (risk-based)
+- [ ] Privileged access management
+- [ ] Just-in-Time administration
+- [ ] Audit logging and SIEM integration
+
+### Phase 5: Microsoft Entra ID (PLANNED)
+- [ ] Azure AD Connect installation
+- [ ] Hybrid identity synchronization
+- [ ] Seamless SSO configuration
+- [ ] Federation with OKTA (if applicable)
+
+---
+
+##  Repository Structure
+
+```
+enterprise-iam-lab/
+├── docs/
+│   ├── architecture/        # Design decisions, diagrams
+│   ├── guides/             # Step-by-step implementation
+│   ├── runbooks/           # Operations procedures
+│   └── reference/          # Standards, conventions
+│
+├── scripts/
+│   ├── active-directory/   # AD automation (PowerShell)
+│   ├── okta/              # OKTA API scripts
+│   └── utilities/         # General tools
+│
+├── configs/
+│   ├── group-policies/    # GPO exports
+│   ├── okta/             # OKTA configs (sanitized)
+│   └── templates/        # User/group CSV templates
+│
+├── labs/                  # Hands-on exercises
+└── assets/               # Images, diagrams, videos
+```
+
+See [Repository Structure Guide](docs/reference/repository-structure.md) for detailed organization.
+
+---
+
+##  Learning Outcomes
+
+By following this lab, you'll master:
+
+### Technical Skills
+- **Hybrid Identity Architecture**: Design and implement cloud + on-prem integration
+- **Enterprise AD Management**: OUs, GPOs, security groups, delegation
+- **OKTA Administration**: Universal Directory, SSO, lifecycle management, MFA
+- **Automation**: PowerShell scripting, Microsoft Graph API, OKTA API
+- **Security Hardening**: Defense-in-depth, least privilege, conditional access
+- **Troubleshooting**: Directory sync issues, authentication failures, SSO debugging
+
+### Enterprise Best Practices
+- Split-brain DNS for hybrid environments
+- Tiered admin model (Privileged Access Workstation principles)
+- Naming conventions and documentation standards
+- Change management and rollback procedures
+- Audit compliance (SOC 2, HIPAA considerations)
+
+---
+
+##  Quick Start
+
+### Prerequisites
+- Windows Server 2022 (or 2019)
+- OKTA Integrator/Developer account
+- Public domain (optional but recommended)
+- VMware or Hyper-V for homelab
+- PowerShell 5.1+ (7.x recommended)
+
+### Getting Started
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/noble-antwi/enterprise-iam-lab
+   cd enterprise-iam-lab
+   ```
+
+2. **Follow the guides in order**
+   - Start with `docs/guides/phase-1-foundation/`
+   - Each phase builds on the previous
+   - Validate with labs before proceeding
+
+3. **Adapt to your environment**
+   - Update `docs/reference/naming-conventions.md` with your details
+   - Modify scripts with your domain names
+   - Use `.env.example` patterns for sensitive data
+
+---
+
+##  Lab Environment Highlights
+
+### Active Directory Configuration
+*Image: UPN Suffix Configuration showing `biira.online` added as alternative UPN*
+
+### OKTA Dashboard
+*Image: OKTA Admin Console showing 4 active users, 8 SSO apps, operational status*
+
+### Custom Branding
+*Image: OKTA custom domain configuration with `www.biira.online`*
+
+---
+
+## Important Notes
+
+### Security & Privacy
+- **No sensitive data**: All configs are sanitized examples
+- **Service account passwords**: Referenced in documentation, never committed
+- **OKTA tenant details**: Masked in screenshots and configs
+- **IP addresses**: Use your own network ranges
+
+### Lab vs Production
+While this lab follows enterprise best practices, remember:
+- Homelab environments lack physical security controls
+- Not all configurations scale to 10,000+ users
+- Some features require enterprise licensing (Entra ID P2, OKTA Workforce Identity)
+
+---
+
+## Contributing
+
+This is a learning project, but feedback is welcome!
+
+- **Found an issue?** Open a GitHub issue with details
+- **Have a suggestion?** Submit a pull request with improvements
+- **Want to share your adaptation?** Fork and link back!
+
+---
+
+## Resources & References
+
+### Official Documentation
+- [OKTA Developer Documentation](https://developer.okta.com/)
+- [Microsoft Active Directory Best Practices](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/)
+- [Azure AD Hybrid Identity](https://learn.microsoft.com/en-us/azure/active-directory/hybrid/)
+
+### IAM Industry Standards
+- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
+- [SANS Critical Security Controls](https://www.sans.org/critical-security-controls/)
+- [CIS Benchmarks - Active Directory](https://www.cisecurity.org/benchmark/microsoft_windows_server)
+
+### Homelab Communities
+- [r/homelab](https://reddit.com/r/homelab) - Homelab enthusiasts
+- [r/activedirectory](https://reddit.com/r/activedirectory) - AD best practices
+- [OKTA Community](https://support.okta.com/community) - OKTA-specific help
+
+---
+
+## About This Project
+
+**Author**: Noble W. Antwi  
+**Purpose**: Skills demonstration, portfolio building, continuous learning  
+**Status**: Active development (Phase 2)  
+
+*Built with  and countless hours of troubleshooting*
+
+---
+
+**Last Updated**: October 2025  
+**Next Milestone**: Complete AD OU structure and OKTA Agent deployment
