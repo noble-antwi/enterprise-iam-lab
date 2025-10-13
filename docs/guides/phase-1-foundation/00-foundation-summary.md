@@ -36,13 +36,13 @@ I configured the server with a static IP address on a dedicated management VLAN 
 **Network Settings:**
 ```powershell
 # Configure static IP address
-New-NetIPAddress -InterfaceAlias "Ethernet0" `
+New-NetIPAddress -InterfaceAlias "Ethernet 2" `
                  -IPAddress 192.168.50.2 `
                  -PrefixLength 24 `
                  -DefaultGateway 192.168.50.1
 
 # Set DNS servers (initially external, later points to itself)
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet0" `
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet 2" `
                            -ServerAddresses 192.168.50.1,8.8.8.8
 ```
 
@@ -55,6 +55,7 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet0" `
 **Rationale:** Static IP ensures consistent domain controller accessibility. VLAN segmentation follows enterprise network design principles for security and traffic isolation.
 
 ![Network Configuration](../../../assets/images/screenshots/phase-1/01-network-config-static-ip.png.png)
+
 *Figure 1: Static IP configuration showing 192.168.50.2 address assignment on srv1. Network adapter properties display manual IP configuration with subnet mask 255.255.255.0 and default gateway 192.168.50.1, establishing the foundation for domain controller network accessibility.*
 
 ---
@@ -111,7 +112,7 @@ After promotion, I reconfigured DNS to point to the server itself (loopback), ma
 
 ```powershell
 # Update DNS to point to itself
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet0" `
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet 2" `
                            -ServerAddresses 127.0.0.1,192.168.50.2
 
 # Verify AD services
@@ -127,10 +128,7 @@ Get-Service -Name ADWS,DNS,Netlogon,NTDS | Select-Object Name,Status,StartType
 
 ![Verification of AD Services](<../../../assets/images/screenshots/phase-1/Verification of AD Services.png>)
 
-
 ---
-
-
 
 ## DNS Architecture Implementation
 
@@ -249,9 +247,8 @@ Get-ADForest | Set-ADForest -UPNSuffixes @{Add="biira.online"}
 # Output: biira.online
 ```
 
-**Location:** `assets/images/screenshots/phase-1/01-upn-suffix-config.png`
-
 ![UPN Suffix Configuration](../../../assets/images/screenshots/phase-1/01-upn-suffix-config.png)
+
 *Figure 2: Active Directory Domains and Trusts showing UPN Suffixes configuration. The alternative UPN suffix "biira.online" has been added to the forest, enabling users to authenticate with username@biira.online instead of username@ad.biira.online. This configuration is essential for clean OKTA SSO integration and professional user experience.*
 
 **Why This Architecture:**
@@ -273,11 +270,11 @@ I provisioned an OKTA Integrator (formerly Developer) tenant for the cloud ident
 - **Tenant Type:** Integrator (free tier with full feature access)
 - **Tenant URL:** `integrator-9057042-admin.okta.com`
 - **Admin Console:** Full access to Universal Directory, SSO, MFA
-- **User Capacity:** 10 active users (sufficient for lab environment)
+- **User Capacity:** Unlimited.
 
 **Location:** `assets/images/screenshots/phase-1/03-okta-dashboard.png`
 
-![OKTA Admin Dashboard](../../../assets/images/screenshots/phase-1/03-okta-dashboard.png)
+![OKTA Admin Dashboard](../../../assets/images/screenshots/phase-1/03-okta-dashboard.png.png)
 *Figure 3: OKTA Admin Console dashboard showing operational status. The overview displays 4 active users (initial test accounts), 8 SSO applications configured, and OKTA service showing "Operational" status with no agents added yet (AD Agent installation pending Phase 3).*
 
 ### Custom Branding Implementation
@@ -296,9 +293,8 @@ I configured custom branding to align the OKTA tenant with the organization's pu
 4. Uploaded brand logo (optional for lab)
 5. Set as default brand for user-facing pages
 
-**Location:** `assets/images/screenshots/phase-1/04-okta-brands.png`
 
-![OKTA Custom Branding](../../../assets/images/screenshots/phase-1/04-okta-brands.png)
+![OKTA Custom Branding](../../../assets/images/screenshots/phase-1/04-okta-brands.png.png)
 *Figure 4: OKTA Brands configuration page showing two brands: "Biira" with custom domain www.biira.online (organization brand) and the default OKTA subdomain integrator-9057042.okta.com. Custom branding ensures users see the organization's domain rather than generic OKTA URLs, providing professional SSO experience.*
 
 **Why Custom Branding Matters:**
@@ -307,6 +303,8 @@ I configured custom branding to align the OKTA tenant with the organization's pu
 - Brand consistency across authentication flows
 - Prepares for production deployment patterns
 
+![Brand Login Page](../../../assets/images/screenshots/phase-1/05-okta-brand-login-page.png)
+
 ### Initial User Provisioning
 
 I created initial test users in OKTA to validate SSO functionality before AD integration.
@@ -314,13 +312,10 @@ I created initial test users in OKTA to validate SSO functionality before AD int
 **Test Users Created:**
 - Noble Antwi (noble.antwi@biira.online) - Admin account
 - Enam Vondee (enam.vondee@biira.online) - Test user
-- Noble Worlanyo (nobleworlda@biira.online) - Test user
 
 **Purpose:** Validate OKTA tenant functionality, SSO flows, and MFA policies before implementing AD Agent synchronization.
 
-**Location:** `assets/images/screenshots/phase-1/05-okta-users.png`
-
-![OKTA User Directory](../../../assets/images/screenshots/phase-1/05-okta-users.png)
+![OKTA User Directory](../../../assets/images/screenshots/phase-1/06-okta-users.png)
 *Figure 5: OKTA Directory showing initial user accounts. The People directory displays 4 active users with email addresses using @biira.online and other domains. These test accounts validate OKTA tenant functionality and SSO configuration before AD Agent integration in Phase 3.*
 
 ---
@@ -395,9 +390,8 @@ I configured the public domain (biira.online) at Namecheap with basic DNS record
 - **CNAME (www):** Redirects www.biira.online to root domain
 - **TXT Records:** Domain verification for services
 
-**Location:** `assets/images/screenshots/phase-1/02-namecheap-domain.png`
 
-![Namecheap Domain Configuration](../../../assets/images/screenshots/phase-1/02-namecheap-domain.png)
+![Namecheap Domain Configuration](../../../assets/images/screenshots/phase-1/07-namecheap-domain.png.png)
 *Figure 6: Namecheap domain management dashboard for biira.online. The domain status shows "Active" with auto-renew enabled through September 2026. Domain uses Namecheap BasicDNS for public DNS hosting, completely separate from internal AD DNS (ad.biira.online), demonstrating proper split-brain DNS architecture.*
 
 **Future OKTA Custom Domain (Phase 3+):**
@@ -441,28 +435,30 @@ The implemented architecture establishes the foundation for hybrid identity mana
 ### Integration Readiness Checklist
 
 **Active Directory:**
-- ✅ Domain controller deployed and operational
-- ✅ DNS configured with forward/reverse zones
-- ✅ Alternative UPN suffix added (biira.online)
-- ✅ Domain health validated (DCDIAG passed)
-- ✅ Services running (ADWS, DNS, Netlogon, NTDS)
+- Domain controller deployed and operational
+- DNS configured with forward/reverse zones
+- Alternative UPN suffix added (biira.online)
+- Domain health validated (DCDIAG passed)
+- Services running (ADWS, DNS, Netlogon, NTDS)
 
 **OKTA:**
-- ✅ Integrator tenant provisioned
-- ✅ Custom branding configured (www.biira.online)
-- ✅ Initial test users created
-- ✅ Admin console accessible
+
+- Integrator tenant provisioned
+- Custom branding configured (<www.biira.online>)
+- Initial test users created
+- Admin console accessible
 
 **Network:**
-- ✅ Static IP configured (192.168.50.2)
-- ✅ VLAN segmentation (Management VLAN 50)
-- ✅ DNS forwarders configured
-- ✅ Split-brain DNS operational
+- Static IP configured (192.168.50.2)
+- VLAN segmentation (Management VLAN 50)
+- DNS forwarders configured
+- Split-brain DNS operational
 
 **Public Infrastructure:**
-- ✅ Domain registered (biira.online via Namecheap)
-- ✅ Public DNS configured
-- ✅ Ready for OKTA custom domain (future)
+
+- Domain registered (biira.online via Namecheap)
+- Public DNS configured
+- Ready for OKTA custom domain (future)
 
 ---
 
