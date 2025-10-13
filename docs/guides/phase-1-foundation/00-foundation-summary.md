@@ -6,7 +6,7 @@ I established the foundational infrastructure for a hybrid identity management e
 
 **Key Achievements:**
 - Deployed Windows Server 2022 as primary domain controller (srv1)
-- Established Active Directory domain: ad.biira.online
+- Established Active Directory domain: *ad.biira.online*
 - Configured split-brain DNS architecture for hybrid identity
 - Added alternative UPN suffix: biira.online for cloud SSO
 - Provisioned and customized OKTA Integrator tenant
@@ -26,7 +26,7 @@ I deployed Windows Server 2022 on physical hardware to serve as the primary doma
 - **Operating System:** Windows Server 2022 Standard (Desktop Experience)
 - **RAM:** 8GB
 - **CPU:** 4 cores
-- **Storage:** 60GB
+- **Storage:** 222GB
 - **Network:** Physical Ethernet adapter
 
 ### Network Configuration
@@ -54,9 +54,7 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet0" `
 
 **Rationale:** Static IP ensures consistent domain controller accessibility. VLAN segmentation follows enterprise network design principles for security and traffic isolation.
 
-**Location:** `assets/images/screenshots/phase-1/01-network-config-static-ip.png`
-
-![Network Configuration](../../../assets/images/screenshots/phase-1/01-network-config-static-ip.png)
+![Network Configuration](../../../assets/images/screenshots/phase-1/01-network-config-static-ip.png.png)
 *Figure 1: Static IP configuration showing 192.168.50.2 address assignment on srv1. Network adapter properties display manual IP configuration with subnet mask 255.255.255.0 and default gateway 192.168.50.1, establishing the foundation for domain controller network accessibility.*
 
 ---
@@ -92,7 +90,7 @@ Install-ADDSForest `
     -ForestMode "WinThreshold" `
     -DomainMode "WinThreshold" `
     -InstallDns:$true `
-    -SafeModeAdministratorPassword (ConvertTo-SecureString "SecurePassword!" -AsPlainText -Force) `
+    -SafeModeAdministratorPassword (ConvertTo-SecureString "Removed from Github" -AsPlainText -Force) `
     -Force:$true
 ```
 
@@ -121,12 +119,18 @@ Get-Service -Name ADWS,DNS,Netlogon,NTDS | Select-Object Name,Status,StartType
 ```
 
 **Critical Services Verified:**
-- Active Directory Web Services (ADWS) - Running
-- DNS Server - Running
-- Netlogon - Running
-- NT Directory Services (NTDS) - Running
+- Active Directory Web Services (ADWS) - Running Automatic
+- DNS Server - Running Automatic
+- Netlogon - Running Automatic
+- NT Directory Services (NTDS) - Running Automatic
+
+
+![Verification of AD Services](<../../../assets/images/screenshots/phase-1/Verification of AD Services.png>)
+
 
 ---
+
+
 
 ## DNS Architecture Implementation
 
@@ -148,11 +152,20 @@ I implemented a split-brain DNS architecture to separate internal domain infrast
 **Why This Matters:**
 Users authenticate with clean UPN: `username@biira.online` (matches public domain)
 Internal computers use: `ad.biira.online` for Kerberos and domain services
-OKTA sync uses: `@biira.online` UPN for professional SSO experience
+OKTA sync uses: `@biira.online` UPN for professional SSO experience. This will also be the case for any other Identity Providers that it will be integrated with.
 
 ### DNS Records Configuration
 
 **Forward Lookup Zone (ad.biira.online):**
+
+Set DNS CLeitServerAddress as Ethernet 2
+
+```powershell
+
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet 2"-ServerAddresses 192.168.50.2,8.8.8.8
+
+Get-DnsClientServerAddress -InterfaceAlias "Ethernet
+```
 
 Critical SRV records automatically created by AD promotion:
 
