@@ -396,7 +396,7 @@ This is a learning project, but feedback is welcome!
 **Purpose**: Skills demonstration, portfolio building, continuous learning  
 **Status**: Active development (Phase 2 Complete, Phase 3 Starting)  
 
-*Built with 💙 and countless hours of troubleshooting*
+*Built with  and countless hours of troubleshooting*
 
 ---
 
