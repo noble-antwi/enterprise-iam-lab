@@ -3,7 +3,7 @@
 > **Building production-ready Identity and Access Management skills through hands-on implementation**  
 > A comprehensive homelab demonstrating enterprise-grade IAM integration using Active Directory, OKTA, and Microsoft Entra ID
 
-[![Lab Status](https://img.shields.io/badge/Status-Phase%202%20In%20Progress-yellow)]()
+[![Lab Status](https://img.shields.io/badge/Status-Phase%202%20Complete-brightgreen)]()
 [![AD Domain](https://img.shields.io/badge/AD%20Domain-ad.biira.online-blue)]()
 [![OKTA](https://img.shields.io/badge/OKTA-Integrator%20Tenant-00297A)]()
 
@@ -57,7 +57,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 └─────────────────────────────────────────────────────────────┘
 ```
 
-![Architectural DIagram](<assets/images/Architectural Diagram/ArchitecturalDiagram.png>)
+![Architectural Diagram](<assets/images/Architectural Diagram/ArchitecturalDiagram.png>)
 
 ### Domain Architecture: The Two Domains Explained
 
@@ -70,7 +70,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 | **Example Use** | `AD\jsmith` login on domain PC | `jsmith@biira.online` OKTA login |
 | **Kerberos Realm** | AD.BIIRA.ONLINE | N/A (UPN only) |
 
-**Why This Matters**: This split-brain DNS design is enterprise-standard. Users authenticate with friendly `@biira.online` UPNs while AD internally uses `ad.biira.online`- enabling seamless cloud SSO without exposing internal domain structure.
+**Why This Matters**: This split-brain DNS design is enterprise-standard. Users authenticate with friendly `@biira.online` UPNs while AD internally uses `ad.biira.online` - enabling seamless cloud SSO without exposing internal domain structure.
 
 ---
 
@@ -86,7 +86,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
-##  Current Implementation Status
+## Current Implementation Status
 
 ### Phase 1: Foundation (COMPLETED)
 - [x] Network design and VLAN segmentation
@@ -100,31 +100,132 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 - [x] Custom branding with `biira.online` domain
 - [x] Initial user creation and SSO validation
 
-###  Phase 2: AD Structure & Preparation (IN PROGRESS)
-- [ ] Enterprise OU hierarchy design
-- [ ] Departmental organizational units
-- [ ] Security group structure (role-based access)
-- [ ] Service account creation (OKTA Agent)
-- [ ] Group Policy baseline (password, audit, security)
-- [ ] Bulk user creation (realistic test users)
-- [ ] AD documentation and runbooks
+**Documentation:** `docs/guides/phase-1-foundation/00-foundation-summary.md`
 
-### Phase 3: OKTA Integration (NEXT)
-- [ ] OKTA AD Agent installation
-- [ ] Directory synchronization configuration
-- [ ] Attribute mapping (AD ↔ OKTA)
-- [ ] Group-based provisioning rules
-- [ ] SSO application integration
-- [ ] MFA enforcement policies
+---
 
-### Phase 4: Advanced Security (PLANNED)
+### Phase 2: AD Structure & User Provisioning (COMPLETED)
+
+#### Organizational Structure
+- [x] Enterprise OU hierarchy (20 OUs)
+- [x] Departmental organizational units (6 departments)
+- [x] Administrative tier OUs (Tier 0/1/2)
+- [x] Service account OU
+
+#### Security Groups
+- [x] OKTA integration groups (3 groups)
+- [x] Department access groups (6 groups)
+- [x] Administrative tier groups (3 groups)
+- **Total: 12 security groups**
+
+#### User Provisioning
+- [x] Employee accounts: 27 users across 6 departments
+- [x] Administrative accounts: 7 accounts (Tier 0/1/2)
+- [x] Service account: 1 (svc-okta-agent)
+- [x] Built-in Administrator: Disabled
+- **Total: 35 accounts in Active Directory**
+
+#### Account Distribution
+
+**Regular Employee Accounts (27):**
+- Executive: 4 users
+- IT: 6 users
+- Finance: 5 users
+- HR: 3 users
+- Sales: 5 users
+- Marketing: 4 users
+
+**Administrative Accounts (7):**
+- Tier 0 Domain Admins: 1 account
+- Tier 1 Server Admins: 4 accounts
+- Tier 2 Workstation Admins: 2 accounts
+
+#### Advanced Security Implementation
+
+- [x] Microsoft Tiered Administrative Model
+- [x] Dual-account pattern for IT staff
+- [x] Kerberos hardening (AccountNotDelegated + Require Pre-Auth)
+- [x] Built-in Administrator disabled
+- [x] Admin accounts isolated from OKTA sync (3-layer protection)
+
+**Documentation:**
+
+- `docs/guides/phase-2-ad-structure/00-implementation-summary.md` (Employee provisioning)
+- `docs/guides/phase-2-ad-structure/01-admin-account-implementation.md` (Admin tier implementation)
+
+**Scripts Created:**
+
+- `Create-OUStructure.ps1`
+- `Create-OktaGroups.ps1`
+- `Department_Group_Creation.ps1`
+- `Bulk-CreateUsers.ps1`
+- `Create-AdminGroups.ps1`
+- `Create-Tier0-Admin.ps1`
+- `Create-Tier1-Admins.ps1`
+- `Create-Tier2-Admins.ps1`
+- `Harden-AdminAccounts.ps1`
+
+---
+
+###  Phase 3: OKTA Integration (NEXT)
+
+**Status:** Ready to start
+
+#### Prerequisites Completed:
+
+- AD OU structure created
+- SG-OKTA-AllUsers group populated (27 members)
+- svc-okta-agent service account created
+- Test users have @biira.online UPN
+- Admin accounts properly isolated
+
+#### Implementation Steps:
+
+**1. Download OKTA AD Agent**
+- Log into OKTA Admin Console
+- Navigate to: Directory → Directory Integrations
+- Click: Add Active Directory
+- Download AD Agent installer
+
+**2. Install AD Agent (on srv1)**
+```
+- Run installer as Domain Admin
+- Connect to OKTA tenant
+- Use svc-okta-agent for AD authentication
+- Configure sync scope: OU=Employees,OU=Users,OU=BIIRA,DC=ad,DC=biira,DC=online
+- Set user filter: memberOf=SG-OKTA-AllUsers
+```
+
+**3. Configure Attribute Mapping**
+- Map AD attributes to OKTA profile
+- Key mappings:
+  - userPrincipalName → login
+  - mail → email
+  - department → department
+  - title → title
+
+**4. Initial Sync**
+- Start manual sync
+- Verify 27 users appear in OKTA
+- Check group memberships
+- Validate admin accounts NOT synced
+
+**Documentation:** (To be created)
+- `docs/guides/phase-3-okta-integration/01-okta-agent-install.md`
+- `docs/guides/phase-3-okta-integration/02-directory-sync.md`
+
+---
+
+###  Phase 4: Advanced Security (PLANNED)
 - [ ] Conditional Access policies
 - [ ] Adaptive MFA (risk-based)
 - [ ] Privileged access management
 - [ ] Just-in-Time administration
 - [ ] Audit logging and SIEM integration
 
-### Phase 5: Microsoft Entra ID (PLANNED)
+---
+
+###  Phase 5: Microsoft Entra ID (PLANNED)
 - [ ] Azure AD Connect installation
 - [ ] Hybrid identity synchronization
 - [ ] Seamless SSO configuration
@@ -132,31 +233,63 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
+##  Implementation Progress
+
+```
+Phase 1: Foundation           ████████████████████ 100% ✅
+Phase 2: AD Structure         ████████████████████ 100% ✅
+Phase 3: OKTA Integration     ░░░░░░░░░░░░░░░░░░░░   0% 🔄
+Phase 4: Advanced Security    ░░░░░░░░░░░░░░░░░░░░   0% 📋
+Phase 5: Entra ID            ░░░░░░░░░░░░░░░░░░░░   0% 📋
+```
+
+---
+
 ##  Repository Structure
 
 ```
 enterprise-iam-lab/
+├── README.md                          # Project overview
+│
 ├── docs/
-│   ├── architecture/        # Design decisions, diagrams
-│   ├── guides/             # Step-by-step implementation
-│   ├── runbooks/           # Operations procedures
-│   └── reference/          # Standards, conventions
+│   ├── architecture/                  # Design decisions, diagrams
+│   ├── guides/                        # Step-by-step implementation
+│   │   ├── phase-1-foundation/
+│   │   │   └── 00-foundation-summary.md
+│   │   └── phase-2-ad-structure/
+│   │       ├── 00-implementation-summary.md
+│   │       └── 01-admin-account-implementation.md
+│   ├── runbooks/                      # Operations procedures
+│   └── reference/                     # Standards, conventions
 │
 ├── scripts/
-│   ├── active-directory/   # AD automation (PowerShell)
-│   ├── okta/              # OKTA API scripts
-│   └── utilities/         # General tools
+│   ├── active-directory/              # AD automation (PowerShell)
+│   │   ├── Create-OUStructure.ps1
+│   │   ├── Create-OktaGroups.ps1
+│   │   ├── Department_Group_Creation.ps1
+│   │   ├── Bulk-CreateUsers.ps1
+│   │   ├── Create-AdminGroups.ps1
+│   │   ├── Create-Tier0-Admin.ps1
+│   │   ├── Create-Tier1-Admins.ps1
+│   │   ├── Create-Tier2-Admins.ps1
+│   │   └── Harden-AdminAccounts.ps1
+│   ├── okta/                          # OKTA API scripts
+│   └── utilities/                     # General tools
 │
 ├── configs/
-│   ├── group-policies/    # GPO exports
-│   ├── okta/             # OKTA configs (sanitized)
-│   └── templates/        # User/group CSV templates
+│   ├── group-policies/                # GPO exports
+│   ├── okta/                          # OKTA configs (sanitized)
+│   └── templates/                     # User/group CSV templates
 │
-├── labs/                  # Hands-on exercises
-└── assets/               # Images, diagrams, videos
+├── labs/                              # Hands-on exercises
+└── assets/                            # Images, diagrams, videos
+    ├── csv/
+    │   └── biira_employees.csv
+    └── images/
+        └── screenshots/
+            ├── phase-1/
+            └── phase-2/
 ```
-
-See [Repository Structure Guide](docs/reference/repository-structure.md) for detailed organization.
 
 ---
 
@@ -170,14 +303,16 @@ By following this lab, you'll master:
 - **OKTA Administration**: Universal Directory, SSO, lifecycle management, MFA
 - **Automation**: PowerShell scripting, Microsoft Graph API, OKTA API
 - **Security Hardening**: Defense-in-depth, least privilege, conditional access
+- **Microsoft Tiered Admin Model**: Tier 0/1/2 privilege separation
 - **Troubleshooting**: Directory sync issues, authentication failures, SSO debugging
 
 ### Enterprise Best Practices
 - Split-brain DNS for hybrid environments
 - Tiered admin model (Privileged Access Workstation principles)
+- Dual-account pattern for administrative access
 - Naming conventions and documentation standards
 - Change management and rollback procedures
-- Audit compliance (SOC 2, HIPAA considerations)
+- Audit compliance (SOC 2, HIPAA, PCI-DSS considerations)
 
 ---
 
@@ -209,28 +344,15 @@ By following this lab, you'll master:
 
 ---
 
-##  Lab Environment Highlights
+## Security & Privacy
 
-### Active Directory Configuration
-*Image: UPN Suffix Configuration showing `biira.online` added as alternative UPN*
-
-### OKTA Dashboard
-*Image: OKTA Admin Console showing 4 active users, 8 SSO apps, operational status*
-
-### Custom Branding
-*Image: OKTA custom domain configuration with `www.biira.online`*
-
----
-
-## Important Notes
-
-### Security & Privacy
 - **No sensitive data**: All configs are sanitized examples
 - **Service account passwords**: Referenced in documentation, never committed
 - **OKTA tenant details**: Masked in screenshots and configs
 - **IP addresses**: Use your own network ranges
 
 ### Lab vs Production
+
 While this lab follows enterprise best practices, remember:
 - Homelab environments lack physical security controls
 - Not all configurations scale to 10,000+ users
@@ -238,7 +360,7 @@ While this lab follows enterprise best practices, remember:
 
 ---
 
-## Contributing
+##  Contributing
 
 This is a learning project, but feedback is welcome!
 
@@ -248,7 +370,7 @@ This is a learning project, but feedback is welcome!
 
 ---
 
-## Resources & References
+## 📖 Resources & References
 
 ### Official Documentation
 - [OKTA Developer Documentation](https://developer.okta.com/)
@@ -259,6 +381,7 @@ This is a learning project, but feedback is welcome!
 - [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
 - [SANS Critical Security Controls](https://www.sans.org/critical-security-controls/)
 - [CIS Benchmarks - Active Directory](https://www.cisecurity.org/benchmark/microsoft_windows_server)
+- [Microsoft Tiered Admin Model](https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model)
 
 ### Homelab Communities
 - [r/homelab](https://reddit.com/r/homelab) - Homelab enthusiasts
@@ -267,15 +390,15 @@ This is a learning project, but feedback is welcome!
 
 ---
 
-## About This Project
+##  About This Project
 
 **Author**: Noble W. Antwi  
 **Purpose**: Skills demonstration, portfolio building, continuous learning  
-**Status**: Active development (Phase 2)  
+**Status**: Active development (Phase 2 Complete, Phase 3 Starting)  
 
-*Built with  and countless hours of troubleshooting*
+*Built with 💙 and countless hours of troubleshooting*
 
 ---
 
 **Last Updated**: October 2025  
-**Next Milestone**: Complete AD OU structure and OKTA Agent deployment
+**Next Milestone**: OKTA AD Agent deployment and directory synchronization
