@@ -236,11 +236,11 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 ##  Implementation Progress
 
 ```
-Phase 1: Foundation           ████████████████████ 100% ✅
-Phase 2: AD Structure         ████████████████████ 100% ✅
-Phase 3: OKTA Integration     ░░░░░░░░░░░░░░░░░░░░   0% 🔄
-Phase 4: Advanced Security    ░░░░░░░░░░░░░░░░░░░░   0% 📋
-Phase 5: Entra ID            ░░░░░░░░░░░░░░░░░░░░   0% 📋
+Phase 1: Foundation           ████████████████████ 100% 
+Phase 2: AD Structure         ████████████████████ 100% 
+Phase 3: OKTA Integration     ░░░░░░░░░░░░░░░░░░░░   0% 
+Phase 4: Advanced Security    ░░░░░░░░░░░░░░░░░░░░   0% 
+Phase 5: Entra ID            ░░░░░░░░░░░░░░░░░░░░   0% 
 ```
 
 ---
@@ -360,7 +360,7 @@ While this lab follows enterprise best practices, remember:
 
 ---
 
-##  Contributing
+## Contributing
 
 This is a learning project, but feedback is welcome!
 
@@ -370,7 +370,7 @@ This is a learning project, but feedback is welcome!
 
 ---
 
-## 📖 Resources & References
+## Resources & References
 
 ### Official Documentation
 - [OKTA Developer Documentation](https://developer.okta.com/)
