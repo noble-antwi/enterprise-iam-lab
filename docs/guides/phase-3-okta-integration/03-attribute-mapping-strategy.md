@@ -4,6 +4,8 @@
 
 I implemented a strategic attribute mapping configuration that optimizes user profile data synchronization between Active Directory and OKTA, focusing on essential business attributes while maintaining operational simplicity. The implementation includes intelligent conditional logic for email handling and establishes a clear framework for future attribute expansion as business requirements evolve.
 
+**Implementation Context:** This attribute mapping implementation builds upon the established OKTA integration and uses the current production SSO domain: login.biira.online
+
 **Strategic Implementation:**
 - Configured core attribute mappings for essential user identity data
 - Implemented conditional email logic with fallback protection

@@ -4,6 +4,8 @@
 
 I implemented advanced OKTA provisioning configuration that establishes Active Directory as the authoritative source for user lifecycle management while implementing enterprise-grade security controls for bidirectional data flow. The configuration enables automated user lifecycle management with conservative security policies that prevent accidental access grants and maintain data integrity across hybrid identity systems.
 
+**Implementation Context:** This configuration follows the core OKTA integration (00-implementation-summary.md) and domain optimization (01-domain-architecture-optimization.md). All configuration screenshots and URLs reference the current production domain: login.biira.online
+
 **Critical Configuration Achievement:**
 - Enabled Active Directory profile sourcing (OKTA profiles become read-only)
 - Implemented conservative user reactivation policies (security-focused)
