@@ -280,8 +280,7 @@ Credential Synchronization Enhancement:
 └── Documentation: Comprehensive user guides for credential management
 ```
 
-![SWA Resolution Dashboard](../../../assets/images/screenshots/phase-4/22-swa-resolution-dashboard.png)
-*Figure 5: OKTA SWA troubleshooting dashboard showing resolved configuration issues and optimized browser plugin performance. The interface displays successful form detection, credential validation status, and cross-browser compatibility metrics.*
+
 
 ### Post-Resolution Performance Metrics
 

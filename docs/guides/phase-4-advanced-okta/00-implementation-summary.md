@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-I successfully implemented advanced OKTA configuration capabilities that transform the platform from basic directory synchronization to an intelligent identity orchestration system. This phase establishes sophisticated application integration using SAML 2.0 and SWA protocols, dynamic group management with Expression Language automation, and enterprise-grade user lifecycle management that scales to support global workforce requirements.
+I successfully implemented advanced OKTA configuration capabilities that transform the platform from basic directory synchronization to an intelligent identity orchestration system. This phase establishes sophisticated application integration using SAML 2.0 and SWA protocols, dynamic group management with **OKTA Expression Language** , and enterprise-grade user lifecycle management that scales to support global workforce requirements.
 
 **Implementation Context:** This phase builds upon the successful OKTA Active Directory integration completed in Phase 3, advancing from foundational directory sync to advanced identity governance, application integration, and automated provisioning capabilities that demonstrate Fortune 500-level identity management sophistication.
 
@@ -132,6 +132,7 @@ Automation Benefits:
 ```
 
 ![OKTA Groups Strategy Dashboard](../../../assets/images/screenshots/phase-4/00-groups-strategy-overview.png)
+
 *Figure 1: OKTA Groups management interface showing hybrid group architecture with AD-sourced department groups and OKTA-mastered location groups. The dashboard displays group types, membership counts, and Expression Language automation status for dynamic assignment capabilities.*
 
 ### Component 2: SAML Application Integration (Phase 4.2)

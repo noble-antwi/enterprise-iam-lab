@@ -442,8 +442,7 @@ HRIS Data Integration:
 └── Training Requirements: Access conditional on compliance training completion
 ```
 
-![HR Integration Architecture](../../../assets/images/screenshots/phase-4/30-hr-integration-architecture.png)
-*Figure 6: Enterprise HR system integration architecture showing automated workforce management with OKTA provisioning. The diagram displays data flow from HRIS through Active Directory to OKTA and integrated applications for comprehensive lifecycle automation.*
+
 
 ---
 

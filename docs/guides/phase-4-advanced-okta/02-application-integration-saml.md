@@ -80,7 +80,7 @@ Application Configuration:
 ```
 
 ![Dropbox General Settings](../../../assets/images/screenshots/phase-4/08-dropbox-general-settings.png)
-*Figure 2: Dropbox for Business general settings configuration showing customized application label "Dropbox" and branding options. The interface displays application visibility settings and administrative notes for internal IT management.*
+*Figure 2: Dropbox for Business general settings configuration showing customized application label "Dropbox" and branding options. The interface displays application visibility settings.*
 
 ### SAML Sign-On Configuration
 
@@ -353,8 +353,6 @@ Corrected Settings:
 └── Monitoring: Real-time provisioning status dashboard in OKTA console
 ```
 
-![Provisioning API Configuration](../../../assets/images/screenshots/phase-4/15-provisioning-api-resolution.png)
-*Figure 9: Dropbox API integration configuration showing resolved provisioning setup with authenticated connection status. The interface displays API permissions, connection health, and provisioning operation success metrics.*
 
 ### Lessons Learned
 
