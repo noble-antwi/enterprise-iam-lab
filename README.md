@@ -3,7 +3,7 @@
 > **Building production-ready Identity and Access Management skills through hands-on implementation**  
 > A comprehensive homelab demonstrating enterprise-grade IAM integration using Active Directory, OKTA, and Microsoft Entra ID
 
-[![Lab Status](https://img.shields.io/badge/Status-Phase%204%20Complete-brightgreen)]()
+[![Lab Status](https://img.shields.io/badge/Status-Phase%205.1%20Complete-brightgreen)]()
 [![AD Domain](https://img.shields.io/badge/AD%20Domain-ad.biira.online-blue)]()
 [![OKTA](https://img.shields.io/badge/OKTA-Integrator%20Tenant-00297A)]()
 [![SSO Domain](https://img.shields.io/badge/SSO-login.biira.online-orange)]()
@@ -25,6 +25,22 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    INTERNET / CLOUD                         │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │         Network-Based Conditional Access             │  │
+│  │  ┌────────────────────────────────────────────────┐  │  │
+│  │  │ Network Zones (Phase 5.1)                      │  │  │
+│  │  │ - Corporate Network (IP Zone)                  │  │  │
+│  │  │ - Allowed Countries (Geographic)               │  │  │
+│  │  │ - Tor Blocking (Threat Intelligence)          │  │  │
+│  │  └────────────────────────────────────────────────┘  │  │
+│  │  ┌────────────────────────────────────────────────┐  │  │
+│  │  │ Authentication Policies                        │  │  │
+│  │  │ Priority 1: Restricted Countries (DENY)        │  │  │
+│  │  │ Priority 2: Public Network (Hardware MFA)      │  │  │
+│  │  │ Priority 3: Corporate Network (Standard MFA)   │  │  │
+│  │  └────────────────────────────────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────┘  │
 │                                                             │
 │  ┌──────────────┐              ┌──────────────────────┐   │
 │  │   OKTA       │◄────────────►│  Microsoft Entra ID  │   │
@@ -63,188 +79,66 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 └─────────────────────────────────────────────────────────────┘
 ```
 
-![Architectural Diagram](<assets/images/Architectural Diagram/ArchitecturalDiagram.png>)
-
-### Domain Architecture: The Two Domains Explained
-
-| Aspect | `ad.biira.online` | `biira.online` |
-|--------|-------------------|----------------|
-| **Type** | Active Directory Domain (Internal) | UPN Suffix + Public Domain |
-| **Scope** | Homelab network only | Internet-routable |
-| **Purpose** | AD forest root, computer auth | User-facing logins, SSO |
-| **DNS** | Internal DNS on srv1 | Namecheap public DNS |
-| **Example Use** | `AD\jsmith` login on domain PC | `jsmith@biira.online` OKTA login |
-| **Kerberos Realm** | AD.BIIRA.ONLINE | N/A (UPN only) |
-
-**Why This Matters**: This split-brain DNS design is enterprise-standard. Users authenticate with friendly `@biira.online` UPNs while AD internally uses `ad.biira.online` - enabling seamless cloud SSO without exposing internal domain structure.
+**Phase 5 Enhancement:** Network-based conditional access policies now enforce location-aware authentication requirements, with differentiated security controls for corporate versus public network access. Geographic restrictions and Tor blocking provide additional layers of defense.
 
 ---
 
-## Technology Stack
+## Project Phases
 
-### Identity & Directory Services
-| Component | Technology | Status | Purpose |
-|-----------|------------|--------|---------|
-| **On-Prem Directory** | Windows Server 2022 Active Directory |  Deployed | User/computer management, GPOs |
-| **Primary Cloud IdP** | OKTA Universal Directory | Configured | SSO, MFA, adaptive auth |
-| **Secondary Cloud IdP** | Microsoft Entra ID | 📋 Planned | Microsoft 365, Azure integration |
-| **Directory Sync** | OKTA AD Agent |  Operational | Real-time AD→OKTA provisioning |
+### Phase 1: Foundation (COMPLETE)
+- [x] Windows Server 2022 deployment (srv1.ad.biira.online)
+- [x] Active Directory Domain Services configuration
+- [x] DNS infrastructure (split-brain architecture)
+- [x] OKTA Integrator tenant provisioning
+- [x] Custom domain configuration (biira.online)
+- [x] Network infrastructure (VLAN segmentation)
 
-### Application Integration
-| Application | Protocol | Status | Users | Purpose |
-|-------------|----------|--------|-------|---------|
-| **Dropbox Business** | SAML 2.0 |  Operational | 4 users | Enterprise file sharing |
-| **Box** | SWA (Password Vaulting) |  Operational | 4 users | Legacy application integration |
-| **Microsoft 365** | SAML/OIDC |  Planned | All users | Productivity suite |
-| **AWS Console** | SAML |  Planned | IT users | Cloud infrastructure |
+**Documentation:** `docs/guides/phase-1-foundation/`
 
 ---
 
-## Current Implementation Status
+### Phase 2: Active Directory Structure (COMPLETE)
+- [x] Organizational Unit hierarchy (20 OUs)
+- [x] Tiered admin model implementation (Tier 0/1/2)
+- [x] Employee account provisioning (27 users across 6 departments)
+- [x] Administrative account creation (7 admin accounts)
+- [x] Security group structure (15 groups)
+- [x] Service account configuration (OKTA sync)
+- [x] Custom AD schema extensions
 
-### Phase 1: Foundation (COMPLETED )
-- [x] Network design and VLAN segmentation
-- [x] Windows Server 2022 deployment (srv1)
-- [x] Active Directory Domain Services installation
-- [x] Domain promotion: `ad.biira.online`
-- [x] Static IP configuration (192.168.50.2)
-- [x] UPN suffix configuration: `biira.online`
-- [x] AD Domain Trusts configured
-- [x] OKTA Integrator tenant provisioned
-- [x] Custom branding with `login.biira.online` domain
-- [x] Initial user creation and SSO validation
-
-**Documentation:** `docs/guides/phase-1-foundation/00-foundation-summary.md`
+**Documentation:** `docs/guides/phase-2-ad-structure/`
 
 ---
 
-### Phase 2: AD Structure & User Provisioning (COMPLETED )
-
-#### Organizational Structure
-- [x] Enterprise OU hierarchy (20 OUs)
-- [x] Departmental organizational units (6 departments)
-- [x] Administrative tier OUs (Tier 0/1/2)
-- [x] Service account OU
-
-#### Security Groups
-- [x] OKTA integration groups (3 groups)
-- [x] Department access groups (6 groups)
-- [x] Administrative tier groups (3 groups)
-- **Total: 12 security groups**
-
-#### User Provisioning
-- [x] Employee accounts: 27 users across 6 departments
-- [x] Administrative accounts: 7 accounts (Tier 0/1/2)
-- [x] Service account: 1 (svc-okta-agent)
-- [x] Built-in Administrator: Disabled
-- **Total: 35 accounts in Active Directory**
-
-#### Account Distribution
-
-**Regular Employee Accounts (27):**
-- Executive: 4 users
-- IT: 6 users
-- Finance: 5 users
-- HR: 3 users
-- Sales: 5 users
-- Marketing: 4 users
-
-**Administrative Accounts (7):**
-- Tier 0 Domain Admins: 1 account
-- Tier 1 Server Admins: 4 accounts
-- Tier 2 Workstation Admins: 2 accounts
-
-#### Advanced Security Implementation
-
-- [x] Microsoft Tiered Administrative Model
-- [x] Dual-account pattern for IT staff
-- [x] Kerberos hardening (AccountNotDelegated + Require Pre-Auth)
-- [x] Built-in Administrator disabled
-- [x] Admin accounts isolated from OKTA sync (3-layer protection)
-
-**Documentation:**
-- `docs/guides/phase-2-ad-structure/00-implementation-summary.md` (Employee provisioning)
-- `docs/guides/phase-2-ad-structure/01-admin-account-implementation.md` (Admin tier implementation)
-
-**Scripts Created:**
-- `Create-OUStructure.ps1`
-- `Create-OktaGroups.ps1`
-- `Department_Group_Creation.ps1`
-- `Bulk-CreateUsers.ps1`
-- `Create-AdminGroups.ps1`
-- `Create-Tier0-Admin.ps1`
-- `Create-Tier1-Admins.ps1`
-- `Create-Tier2-Admins.ps1`
-- `Harden-AdminAccounts.ps1`
-
----
-
-### Phase 3: OKTA Integration (COMPLETED)
-
-#### Prerequisites Completed:
-- [x] AD OU structure created
-- [x] SG-OKTA-AllUsers group populated (27 members)
-- [x] svc-okta-agent service account created
-- [x] Test users have @biira.online UPN
-- [x] Admin accounts properly isolated
-
-#### Implementation Completed:
-- [x] OKTA AD Agent 3.21.0 installed and configured
-- [x] Secure directory synchronization (27 users, 12 groups)
-- [x] Complete administrative account isolation (0 admin accounts synced)
-- [x] Hourly synchronization schedule
-- [x] Domain architecture optimization (www.biira.online → login.biira.online)
-- [x] Advanced provisioning configuration
-- [x] Attribute mapping strategy
+### Phase 3: OKTA Integration (COMPLETE)
+- [x] OKTA AD Agent installation (version 3.21.0)
+- [x] Secure cloud connectivity establishment
+- [x] Directory synchronization configuration
 - [x] User lifecycle management
+- [x] Group synchronization with attribute mapping
+- [x] Administrative account isolation
+- [x] Sync schedule optimization (15-minute intervals)
 
-**Documentation:**
-- `docs/guides/phase-3-okta-integration/00-implementation-summary.md`
-- `docs/guides/phase-3-okta-integration/01-domain-architecture-optimization.md`
-- `docs/guides/phase-3-okta-integration/02-advanced-provisioning-configuration.md`
-- `docs/guides/phase-3-okta-integration/03-attribute-mapping-strategy.md`
-- `docs/guides/phase-3-okta-integration/04-user-lifecycle-management.md`
+**Documentation:** `docs/guides/phase-3-okta-integration/`
 
 ---
 
-### Phase 4: Advanced OKTA Configuration (COMPLETED)
+### Phase 4: Advanced OKTA Configuration (COMPLETE)
+- [x] OKTA Expression Language automation
+- [x] Geographic group assignment (OG-Location-Americas)
+- [x] SAML 2.0 application integration (Dropbox Business)
+- [x] SWA application integration (Box)
+- [x] Automated user provisioning workflows
+- [x] Application lifecycle management
+- [x] Comprehensive testing and validation procedures
+- [x] Operational procedures and troubleshooting guides
 
-#### OKTA Groups Strategy
-- [x] Expression Language implementation for dynamic group assignment
-- [x] OG-Location-Americas group with geographic business logic
-- [x] Real-time group assignment based on user attributes
-- [x] Hybrid group architecture (AD-sourced + OKTA-mastered)
-
-#### Application Integration
-- [x] **SAML 2.0 Integration:** Dropbox Business with automated provisioning
-- [x] **SWA Integration:** Box with secure password vaulting
-- [x] Group-based application assignment (4 users per application)
-- [x] Cross-protocol authentication testing and validation
-
-#### Automated Provisioning
-- [x] Real-time user lifecycle management (create/update/deactivate)
-- [x] Advanced attribute mapping with conditional logic
-- [x] API integration with comprehensive error handling
-- [x] Cross-application provisioning coordination
-
-#### Testing & Validation
-- [x] Comprehensive user experience testing (joshua.brooks@biira.online)
-- [x] Cross-browser compatibility validation
-- [x] Performance testing and optimization
-- [x] Security testing and compliance validation
-
-#### Operational Excellence
-- [x] 24/7 monitoring and alerting systems
-- [x] Comprehensive troubleshooting procedures
-- [x] Incident response workflows
-- [x] Performance optimization and capacity planning
-
-**Key Achievements:**
-- **Applications Integrated:** 2 (Dropbox Business SAML, Box SWA)
-- **Authentication Protocols:** SAML 2.0 + Secure Web Authentication
-- **Automation:** Geographic group assignment, automated provisioning
-- **User Experience:** second average application access time
-- **Security:** 100% admin account isolation, complete audit trail
+**Key Features:**
+- Dynamic group assignment using Expression Language
+- Cross-protocol application integration (SAML + SWA)
+- Automated provisioning with attribute mapping
+- Geographic-based access control
+- Enterprise operational procedures
 
 **Documentation:**
 - `docs/guides/phase-4-advanced-okta/00-implementation-summary.md`
@@ -257,13 +151,33 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
-### Phase 5: Advanced Authentication & Security (PLANNED)
-- [ ] Multi-Factor Authentication (MFA) implementation
-- [ ] Adaptive authentication and risk-based policies
-- [ ] Privileged Access Management (PAM) integration
-- [ ] Just-in-Time administration
-- [ ] Conditional Access policies
-- [ ] Advanced threat detection and response
+### Phase 5: Advanced Authentication & Security (IN PROGRESS)
+- [x] **Network-based conditional access (Phase 5.1) - COMPLETE**
+- [x] IP network zones for corporate network identification
+- [x] Dynamic zones for geographic and threat-based controls
+- [x] Tor anonymizer blocking for anonymous proxy prevention
+- [x] Authentication policies with graduated security requirements
+  - Priority 1: Restricted Countries (DENY access)
+  - Priority 2: Public Network (Hardware-protected MFA required)
+  - Priority 3: Corporate Network (Standard MFA required)
+- [x] Comprehensive testing with pilot users
+- [x] Video demonstrations of authentication flows
+- [ ] Adaptive MFA and risk-based authentication (Phase 5.2) PLANNED
+- [ ] Device trust and posture evaluation (Phase 5.3) PLANNED
+- [ ] Privileged access management (Phase 5.4) PLANNED
+- [ ] Behavioral analytics and anomaly detection (Phase 5.5) PLANNED
+
+**Phase 5.1 Achievements:**
+- Three-tier network zone architecture (IP, Geographic, Threat)
+- Context-aware authentication (corporate vs public network)
+- Geographic access restrictions (country-level controls)
+- Anonymous proxy detection and blocking
+- Defense-in-depth security with graduated MFA requirements
+
+**Documentation:**
+- `docs/guides/phase-5-advanced-security/00-phase-5-overview.md`
+- `docs/guides/phase-5-advanced-security/01-network-zones-implementation.md`
+- `docs/guides/phase-5-advanced-security/README.md`
 
 ---
 
@@ -283,12 +197,12 @@ Phase 1: Foundation                ███████████████
 Phase 2: AD Structure             ████████████████████ 100% 
 Phase 3: OKTA Integration         ████████████████████ 100% 
 Phase 4: Advanced Configuration   ████████████████████ 100% 
-Phase 5: Advanced Security        ░░░░░░░░░░░░░░░░░░░░   0% 
+Phase 5: Advanced Security        ████████░░░░░░░░░░░░  40% (Component 5.1 Complete)
 Phase 6: Microsoft Entra ID       ░░░░░░░░░░░░░░░░░░░░   0% 
 ```
 
-**Current Status:** Advanced Identity Orchestration Platform Operational  
-**Next Milestone:** Multi-Factor Authentication and Conditional Access implementation
+**Current Status:** Network-Based Conditional Access Operational  
+**Next Milestone:** Adaptive Multi-Factor Authentication (Phase 5.2)
 
 ---
 
@@ -310,6 +224,18 @@ Phase 6: Microsoft Entra ID       ░░░░░░░░░░░░░░░�
   - Box (SWA + password vaulting)
 - **Authentication Protocols:** SAML 2.0, SWA
 - **User Coverage:** 4 users with application access via OG-Location-Americas
+
+### Security Infrastructure
+- **Network Zones:** 3 total
+  - IP Zones: 1 (Corporate Network)
+  - Dynamic Zones: 2 (Allowed Countries, Tor Blocking)
+- **Authentication Policy Rules:** 3
+  - Priority 1: Restricted Countries (DENY)
+  - Priority 2: Public Network (Hardware-Protected MFA)
+  - Priority 3: Corporate Network (Standard MFA)
+- **Geographic Controls:** Country-level access restrictions (United States)
+- **Threat Protection:** Tor anonymizer proxy blocking enabled
+- **MFA Enforcement:** 100% coverage across all access scenarios
 
 ### Infrastructure Components
 - **Domain Controllers:** 1 (srv1.ad.biira.online)
@@ -333,6 +259,10 @@ By following this lab, you'll master:
 - **Security Hardening**: Defense-in-depth, least privilege, conditional access
 - **Microsoft Tiered Admin Model**: Tier 0/1/2 privilege separation
 - **Troubleshooting**: Directory sync issues, authentication failures, SSO debugging
+- **Conditional Access**: Network-based policies, graduated security requirements
+- **Risk-Based Authentication**: Context-aware MFA, hardware-protected factors
+- **Geographic Controls**: Dynamic zones, country-level restrictions
+- **Threat Intelligence**: Anonymous proxy detection, Tor blocking
 
 ### Enterprise Best Practices
 - Split-brain DNS for hybrid environments
@@ -343,6 +273,9 @@ By following this lab, you'll master:
 - Audit compliance (SOC 2, HIPAA, PCI-DSS considerations)
 - Expression Language for dynamic business logic
 - Cross-protocol application integration strategies
+- Zero-trust security architecture principles
+- Defense-in-depth security layering
+- Context-aware authentication policies
 
 ---
 
@@ -371,6 +304,7 @@ By following this lab, you'll master:
    - Update scripts with your domain names
    - Modify Expression Language rules for your business logic
    - Configure applications for your specific requirements
+   - Adjust network zones for your IP ranges
 
 ---
 
@@ -399,39 +333,46 @@ This is a learning project, but feedback is welcome!
 - **Found an issue?** Open a GitHub issue with details
 - **Have a suggestion?** Submit a pull request with improvements
 - **Want to share your adaptation?** Fork and link back!
-- **Implementing similar lab?** Feel free to use as reference and share your learnings
+- **Implementing similar lab?** Share your experience!
 
 ---
 
-## Resources & References
+## Project Timeline
 
-### Official Documentation
-- [OKTA Developer Documentation](https://developer.okta.com/)
-- [Microsoft Active Directory Best Practices](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/)
-- [Azure AD Hybrid Identity](https://learn.microsoft.com/en-us/azure/active-directory/hybrid/)
-
-### IAM Industry Standards
-- [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
-- [SANS Critical Security Controls](https://www.sans.org/critical-security-controls/)
-- [CIS Benchmarks - Active Directory](https://www.cisecurity.org/benchmark/microsoft_windows_server)
-- [Microsoft Tiered Admin Model](https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model)
-
-### Homelab Communities
-- [r/homelab](https://reddit.com/r/homelab) - Homelab enthusiasts
-- [r/activedirectory](https://reddit.com/r/activedirectory) - AD best practices
-- [OKTA Community](https://support.okta.com/community) - OKTA-specific help
+- **Phase 1-2:** Foundation and AD Structure (October 2024)
+- **Phase 3:** OKTA Integration (November 2024)
+- **Phase 4:** Advanced OKTA Configuration (November 2024)
+- **Phase 5.1:** Network-Based Conditional Access (December 2024)
+- **Phase 5.2-5.5:** Advanced Authentication Features (Planned Q1-Q2 2025)
+- **Phase 6:** Microsoft Entra ID Integration (Planned Q2-Q3 2025)
 
 ---
 
-## About This Project
+## Author
 
-**Author**: Noble W. Antwi  
-**Purpose**: Skills demonstration, portfolio building, continuous learning  
-**Status**: Active development (Phase 4 Complete, Phase 5 Planning)  
-**LinkedIn**: [Connect for IAM discussions](https://linkedin.com/in/noble-antwi)
+**Noble W. Antwi**  
+Enterprise IAM Lab - A comprehensive learning journey in hybrid identity architecture
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://www.linkedin.com/in/your-profile)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/noble-antwi)
 
 ---
 
-**Last Updated**: November 2025  
-**Next Milestone**: Multi-Factor Authentication and Conditional Access implementation  
-**Current Focus**: Advanced authentication protocols and security enhancement
+## License
+
+This project is for educational purposes. Configurations and scripts are provided as-is for learning and reference.
+
+---
+
+## Acknowledgments
+
+- **OKTA** for Integrator program access
+- **Microsoft** for comprehensive Active Directory documentation
+- **Community** for inspiration and knowledge sharing
+- **Homelab Community** for architectural guidance
+
+---
+
+**Last Updated:** December 2024  
+**Current Phase:** 5.1 (Network-Based Conditional Access) - COMPLETE  
+**Documentation Standard:** Enterprise Production Grade
