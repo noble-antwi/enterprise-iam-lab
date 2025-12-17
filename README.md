@@ -85,24 +85,24 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 ### Identity & Directory Services
 | Component | Technology | Status | Purpose |
 |-----------|------------|--------|---------|
-| **On-Prem Directory** | Windows Server 2022 Active Directory | ✅ Deployed | User/computer management, GPOs |
-| **Primary Cloud IdP** | OKTA Universal Directory | ✅ Configured | SSO, MFA, adaptive auth |
+| **On-Prem Directory** | Windows Server 2022 Active Directory |  Deployed | User/computer management, GPOs |
+| **Primary Cloud IdP** | OKTA Universal Directory | Configured | SSO, MFA, adaptive auth |
 | **Secondary Cloud IdP** | Microsoft Entra ID | 📋 Planned | Microsoft 365, Azure integration |
-| **Directory Sync** | OKTA AD Agent | ✅ Operational | Real-time AD→OKTA provisioning |
+| **Directory Sync** | OKTA AD Agent |  Operational | Real-time AD→OKTA provisioning |
 
 ### Application Integration
 | Application | Protocol | Status | Users | Purpose |
 |-------------|----------|--------|-------|---------|
-| **Dropbox Business** | SAML 2.0 | ✅ Operational | 4 users | Enterprise file sharing |
-| **Box** | SWA (Password Vaulting) | ✅ Operational | 4 users | Legacy application integration |
-| **Microsoft 365** | SAML/OIDC | 📋 Planned | All users | Productivity suite |
-| **AWS Console** | SAML | 📋 Planned | IT users | Cloud infrastructure |
+| **Dropbox Business** | SAML 2.0 |  Operational | 4 users | Enterprise file sharing |
+| **Box** | SWA (Password Vaulting) |  Operational | 4 users | Legacy application integration |
+| **Microsoft 365** | SAML/OIDC |  Planned | All users | Productivity suite |
+| **AWS Console** | SAML |  Planned | IT users | Cloud infrastructure |
 
 ---
 
 ## Current Implementation Status
 
-### Phase 1: Foundation (COMPLETED ✅)
+### Phase 1: Foundation (COMPLETED )
 - [x] Network design and VLAN segmentation
 - [x] Windows Server 2022 deployment (srv1)
 - [x] Active Directory Domain Services installation
@@ -118,7 +118,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
-### Phase 2: AD Structure & User Provisioning (COMPLETED ✅)
+### Phase 2: AD Structure & User Provisioning (COMPLETED )
 
 #### Organizational Structure
 - [x] Enterprise OU hierarchy (20 OUs)
@@ -179,7 +179,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
-### Phase 3: OKTA Integration (COMPLETED ✅)
+### Phase 3: OKTA Integration (COMPLETED)
 
 #### Prerequisites Completed:
 - [x] AD OU structure created
@@ -207,7 +207,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
-### Phase 4: Advanced OKTA Configuration (COMPLETED ✅)
+### Phase 4: Advanced OKTA Configuration (COMPLETED)
 
 #### OKTA Groups Strategy
 - [x] Expression Language implementation for dynamic group assignment
@@ -243,7 +243,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 - **Applications Integrated:** 2 (Dropbox Business SAML, Box SWA)
 - **Authentication Protocols:** SAML 2.0 + Secure Web Authentication
 - **Automation:** Geographic group assignment, automated provisioning
-- **User Experience:** <3 second average application access time
+- **User Experience:** second average application access time
 - **Security:** 100% admin account isolation, complete audit trail
 
 **Documentation:**
@@ -257,7 +257,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
-### Phase 5: Advanced Authentication & Security (PLANNED 📋)
+### Phase 5: Advanced Authentication & Security (PLANNED)
 - [ ] Multi-Factor Authentication (MFA) implementation
 - [ ] Adaptive authentication and risk-based policies
 - [ ] Privileged Access Management (PAM) integration
@@ -267,7 +267,7 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 
 ---
 
-### Phase 6: Microsoft Entra ID Integration (PLANNED 📋)
+### Phase 6: Microsoft Entra ID Integration (PLANNED)
 - [ ] Azure AD Connect installation
 - [ ] Hybrid identity synchronization
 - [ ] Seamless SSO configuration
@@ -317,74 +317,6 @@ Phase 6: Microsoft Entra ID       ░░░░░░░░░░░░░░░�
 - **DNS Architecture:** Split-brain (internal ad.biira.online + public biira.online)
 - **SSO Portal:** login.biira.online
 - **Network Segmentation:** Management VLAN 50 (192.168.50.0/24)
-
----
-
-## Repository Structure
-
-```
-enterprise-iam-lab/
-├── README.md                          # Project overview (this file)
-│
-├── docs/
-│   ├── architecture/                  # Design decisions, diagrams
-│   ├── guides/                        # Step-by-step implementation
-│   │   ├── phase-1-foundation/
-│   │   │   └── 00-foundation-summary.md
-│   │   ├── phase-2-ad-structure/
-│   │   │   ├── 00-implementation-summary.md
-│   │   │   └── 01-admin-account-implementation.md
-│   │   ├── phase-3-okta-integration/
-│   │   │   ├── 00-implementation-summary.md
-│   │   │   ├── 01-domain-architecture-optimization.md
-│   │   │   ├── 02-advanced-provisioning-configuration.md
-│   │   │   ├── 03-attribute-mapping-strategy.md
-│   │   │   └── 04-user-lifecycle-management.md
-│   │   └── phase-4-advanced-okta/
-│   │       ├── 00-implementation-summary.md
-│   │       ├── 01-okta-groups-strategy.md
-│   │       ├── 02-application-integration-saml.md
-│   │       ├── 03-application-integration-swa.md
-│   │       ├── 04-provisioning-configuration.md
-│   │       ├── 05-testing-validation.md
-│   │       └── 06-troubleshooting-operations.md
-│   ├── runbooks/                      # Operations procedures
-│   └── reference/                     # Standards, conventions
-│
-├── scripts/
-│   ├── active-directory/              # AD automation (PowerShell)
-│   │   ├── Create-OUStructure.ps1
-│   │   ├── Create-OktaGroups.ps1
-│   │   ├── Department_Group_Creation.ps1
-│   │   ├── Bulk-CreateUsers.ps1
-│   │   ├── Create-AdminGroups.ps1
-│   │   ├── Create-Tier0-Admin.ps1
-│   │   ├── Create-Tier1-Admins.ps1
-│   │   ├── Create-Tier2-Admins.ps1
-│   │   └── Harden-AdminAccounts.ps1
-│   ├── okta/                          # OKTA API and automation scripts
-│   └── utilities/                     # General tools
-│
-├── configs/
-│   ├── group-policies/                # GPO exports
-│   ├── okta/                          # OKTA configs (sanitized)
-│   │   ├── saml-templates/
-│   │   ├── swa-templates/
-│   │   └── expression-examples.txt
-│   └── templates/                     # User/group CSV templates
-│
-├── labs/                              # Hands-on exercises
-└── assets/                            # Images, diagrams, videos
-    ├── csv/
-    │   └── biira_employees.csv
-    └── images/
-        ├── Architectural Diagram/
-        └── screenshots/
-            ├── phase-1/
-            ├── phase-2/
-            ├── phase-3/
-            └── phase-4/
-```
 
 ---
 
@@ -497,8 +429,6 @@ This is a learning project, but feedback is welcome!
 **Purpose**: Skills demonstration, portfolio building, continuous learning  
 **Status**: Active development (Phase 4 Complete, Phase 5 Planning)  
 **LinkedIn**: [Connect for IAM discussions](https://linkedin.com/in/noble-antwi)
-
-*Built with ❤️ and countless hours of troubleshooting*
 
 ---
 
