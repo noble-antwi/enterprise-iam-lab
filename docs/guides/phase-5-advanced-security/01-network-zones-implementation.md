@@ -460,7 +460,20 @@ I queried the System Log for "Evaluation of sign-on policy" events and confirmed
 
 **Video Documentation:**
 
-A screen recording demonstrates the complete public network authentication flow, highlighting the absence of TOTP options and the requirement for push notification approval.
+**Watch the complete authentication flow:** [Public Network Authentication - YouTube](https://youtu.be/qLD-tUc5B5Y)  
+**Duration:** 1m 28s
+
+This screen recording demonstrates the complete public network authentication flow, showing:
+- Corporate Network zone configured with non-matching IP (10.10.10.10) to simulate public network access
+- Login attempt as krista.scott@oktaice.com with password entry
+- Hardware-protected MFA requirement restricting available authentication methods
+- OKTA Verify TOTP option NOT displayed (excluded due to hardware protection policy)
+- Push notification shown as only available verification method
+- Push notification approval on mobile device
+- Successful authentication to OKTA Dashboard
+- System Log verification showing "Public Network Rule" policy evaluation
+
+**Key Takeaway:** This video provides visual evidence that public network access requires hardware-protected authentication factors, automatically restricting method availability to ensure stronger security controls outside the corporate network perimeter.
 
 ---
 
@@ -505,7 +518,20 @@ I queried the System Log for policy evaluation events and confirmed:
 
 **Video Documentation:**
 
-A screen recording demonstrates the corporate network authentication flow, showing the expanded authentication method options including OKTA Verify TOTP.
+**Watch the complete authentication flow:** [Corporate Network Authentication - YouTube](https://youtu.be/JpR_oS2XjQc)  
+**Duration:** 1m 43s
+
+This screen recording demonstrates the complete corporate network authentication flow, showing:
+- Corporate Network zone configured with actual IP address to match client location
+- Login attempt as krista.scott@oktaice.com with password entry
+- Selection of "Verify with something else" to display all available authentication methods
+- OKTA Verify TOTP displayed as available option (included in corporate network policy)
+- Multiple authentication method options available (Push, TOTP, FastPass)
+- TOTP code entry from OKTA Verify mobile app
+- Successful authentication to OKTA Dashboard
+- System Log verification showing "Corporate Network Rule" policy evaluation
+
+**Key Takeaway:** This video demonstrates that corporate network access provides expanded authentication method flexibility, including TOTP codes, while maintaining multi-factor security requirements. This balance optimizes user experience for trusted network contexts without compromising security posture.
 
 ---
 
@@ -553,6 +579,140 @@ The Tor blocking test confirmed OKTA's threat intelligence successfully:
 - Classified the connection as anonymizing proxy
 - Blocked access before credential evaluation
 - Logged the attempt for security monitoring
+
+---
+
+## Video Demonstrations
+
+### Complete Authentication Flow Documentation
+
+I created comprehensive video demonstrations to capture the complete user experience across different network contexts. These recordings provide visual validation of policy evaluation and authentication method availability that static screenshots cannot convey.
+
+**Videos hosted on YouTube (Unlisted)** for professional presentation and easy sharing.
+
+---
+
+### Video 1: Public Network Authentication Flow
+
+**Watch on YouTube:** [https://youtu.be/qLD-tUc5B5Y](https://youtu.be/qLD-tUc5B5Y)  
+**Duration:** 1m 28s  
+**Test Scenario:** Public Network Rule Evaluation (Priority 2)
+
+**What This Video Demonstrates:**
+
+1. **Network Context Setup**
+   - Corporate Network zone configured with non-matching IP (10.10.10.10)
+   - User's actual IP address outside Corporate Network zone
+   - Public Network Rule expected to apply
+
+2. **Authentication Flow**
+   - Login to login.biira.online as krista.scott@oktaice.com
+   - Password entry as knowledge factor
+   - Authentication method selection screen displayed
+   - Hardware-protected MFA requirement enforced
+
+3. **Method Availability**
+   - OKTA Verify Push: AVAILABLE (hardware-protected)
+   - OKTA Verify FastPass: AVAILABLE (hardware-protected)
+   - OKTA Verify TOTP: NOT AVAILABLE (excluded by hardware protection policy)
+   - Clear demonstration of method restriction for public network access
+
+4. **Authentication Completion**
+   - Push notification sent to mobile device
+   - Push approval on OKTA Verify mobile app
+   - Successful authentication to OKTA Dashboard
+   - Immediate access granted after MFA verification
+
+5. **System Log Verification**
+   - Navigation to Reports > System Log
+   - Filter for policy evaluation events
+   - Confirmation: "Public Network Rule" applied
+   - Client IP and zone match status visible
+
+**Key Insight from Video:**  
+The video clearly shows how hardware-protected factor requirements automatically restrict authentication method availability for public network access. Users cannot select TOTP codes when accessing from untrusted networks, ensuring stronger security controls through hardware-backed verification.
+
+**Why This Matters:**  
+This demonstrates that security policies adapt automatically based on network context without requiring user awareness or manual selection. The policy enforcement is transparent and seamless from the user perspective.
+
+---
+
+### Video 2: Corporate Network Authentication Flow
+
+**Watch on YouTube:** [https://youtu.be/JpR_oS2XjQc](https://youtu.be/JpR_oS2XjQc)  
+**Duration:** 1m 43s  
+**Test Scenario:** Corporate Network Rule Evaluation (Priority 3)
+
+**What This Video Demonstrates:**
+
+1. **Network Context Setup**
+   - Corporate Network zone configured with actual IP address
+   - User's IP address within Corporate Network zone
+   - Corporate Network Rule expected to apply
+
+2. **Authentication Flow**
+   - Login to login.biira.online as krista.scott@oktaice.com
+   - Password entry as knowledge factor
+   - Authentication method selection screen displayed
+   - Standard MFA requirement (expanded method options)
+
+3. **Method Availability**
+   - OKTA Verify Push: AVAILABLE
+   - OKTA Verify FastPass: AVAILABLE
+   - OKTA Verify TOTP: AVAILABLE (included for corporate network)
+   - "Verify with something else" option to view all methods
+   - Clear demonstration of expanded method availability
+
+4. **Authentication Completion**
+   - Selection of "Verify with something else"
+   - OKTA Verify TOTP displayed as available option
+   - 6-digit TOTP code entry from mobile app
+   - Successful authentication to OKTA Dashboard
+   - Immediate access granted after MFA verification
+
+5. **System Log Verification**
+   - Navigation to Reports > System Log
+   - Filter for policy evaluation events
+   - Confirmation: "Corporate Network Rule" applied
+   - Client IP showing match to Corporate Network zone
+
+**Key Insight from Video:**  
+The video demonstrates that corporate network access provides users with expanded authentication method flexibility, including TOTP codes. This improves user experience for trusted network contexts while maintaining strong multi-factor security requirements.
+
+**Why This Matters:**  
+This shows the balance between security and user experience. Trusted network contexts allow more convenient authentication methods without compromising the requirement for multi-factor authentication. Users have choices appropriate to their network trust level.
+
+---
+
+### Video Documentation Value
+
+**Why Screen Recordings Are Critical:**
+
+1. **Dynamic Flow Capture**  
+   Static screenshots cannot convey the authentication flow progression, method selection process, or real-time policy evaluation. Videos show the complete user journey.
+
+2. **Method Availability Proof**  
+   Videos provide undeniable evidence that authentication methods change based on network context, demonstrating policy enforcement in action.
+
+3. **User Experience Validation**  
+   The recordings capture actual user experience, showing both security controls and usability considerations.
+
+4. **System Log Correlation**  
+   Videos demonstrate the connection between user actions and System Log entries, validating policy evaluation.
+
+5. **Technical Interview Value**  
+   These demonstrations serve as concrete evidence of implementation capability and security architecture understanding during technical discussions.
+
+6. **Portfolio Presentation**  
+   Professional video hosting on YouTube enables easy sharing with potential employers, interviewers, and professional network.
+
+**Professional Hosting Decision:**  
+Videos are hosted on YouTube (Unlisted visibility) rather than in the Git repository due to GitHub's 100MB file size limitations. This approach provides:
+- Unlimited storage without repository bloat
+- Professional streaming infrastructure
+- Easy sharing via links
+- No impact on repository clone/push performance
+- Standard practice for technical project documentation
 
 ---
 

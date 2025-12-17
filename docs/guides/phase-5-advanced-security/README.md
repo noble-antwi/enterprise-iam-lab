@@ -73,14 +73,14 @@ I conducted comprehensive testing using a dedicated pilot user (Krista Scott) to
 - Validated hardware-protected MFA requirement enforcement
 - Confirmed TOTP option unavailable
 - Verified System Log showed "Public Network Rule" evaluation
-- Captured video demonstration of authentication flow
+- **Complete video demonstration available below**
 
 **Scenario 2: Corporate Network Authentication**
 - Configured Corporate Network zone with actual IP
 - Validated expanded authentication method availability
 - Confirmed TOTP option available
 - Verified System Log showed "Corporate Network Rule" evaluation
-- Captured video demonstration of authentication flow
+- **Complete video demonstration available below**
 
 **Scenario 3: Tor Browser Blocking**
 - Installed and connected to Tor network
@@ -93,10 +93,63 @@ I conducted comprehensive testing using a dedicated pilot user (Krista Scott) to
 
 ---
 
+## 🎥 Video Demonstrations
+
+### Video 1: Public Network Authentication Flow
+
+**Duration:** 1m 28s  
+**Watch on YouTube:** [https://youtu.be/qLD-tUc5B5Y](https://youtu.be/qLD-tUc5B5Y)
+
+**This video demonstrates:**
+- Corporate Network zone configured with non-matching IP (10.10.10.10) to simulate public network
+- Login attempt as krista.scott@oktaice.com
+- OKTA Verify TOTP option NOT available due to hardware-protected MFA requirement
+- Push notification shown as only available verification method
+- Successful authentication after push notification approval
+- System Log verification showing "Public Network Rule" policy evaluation
+
+**Key Insight:** Hardware-protected factor requirement restricts authentication methods for public network access, ensuring stronger security controls outside the corporate network.
+
+---
+
+### Video 2: Corporate Network Authentication Flow
+
+**Duration:** 1m 43s  
+**Watch on YouTube:** [https://youtu.be/JpR_oS2XjQc](https://youtu.be/JpR_oS2XjQc)
+
+**This video demonstrates:**
+- Corporate Network zone configured with actual IP address
+- Login attempt as krista.scott@oktaice.com
+- Selection of "Verify with something else" option to show available methods
+- OKTA Verify TOTP displayed as available verification method
+- Multiple authentication method options (Push, TOTP, FastPass)
+- Successful authentication using TOTP code entry
+- System Log verification showing "Corporate Network Rule" policy evaluation
+
+**Key Insight:** Corporate network access provides expanded authentication method flexibility, improving user experience while maintaining multi-factor security requirements.
+
+---
+
+### Why Video Demonstrations Matter
+
+**Complete User Experience Capture:**
+- Static screenshots cannot convey the authentication flow dynamics
+- Videos show real-time policy evaluation and method availability
+- Demonstrates actual user experience from login to completion
+- Captures System Log validation for each scenario
+
+**Portfolio Value:**
+- Professional presentation of technical capabilities
+- Easy to share on LinkedIn and with potential employers
+- Demonstrates both technical implementation and user impact
+- Shows attention to security AND user experience
+
+---
+
 ## Directory Structure
 
 ```
-phase-5-network-zones/
+phase-5-advanced-security/
 ├── documentation/
 │   ├── 00-phase-5-overview.md           # Phase 5 strategic overview and roadmap
 │   └── 01-network-zones-implementation.md # Complete implementation guide
@@ -116,11 +169,8 @@ phase-5-network-zones/
 │   ├── 12-public-network-log.png               # System log validation
 │   ├── 13-corporate-network-log.png            # System log validation
 │   ├── 14-tor-blocking-zone.png                # Tor blocking configuration
-│   └── 15-tor-403-forbidden.png                # Tor blocking demonstration
-│
-├── videos/
-│   ├── public-network-authentication-flow.mp4  # Demo: Public network auth
-│   └── corporate-network-authentication-flow.mp4 # Demo: Corporate network auth
+│   ├── 15-tor-403-forbidden.png                # Tor blocking demonstration
+│   └── 16-tor-blocking-logs.png                # Tor blocking system logs
 │
 └── README.md                                    # This file
 ```
@@ -131,70 +181,26 @@ phase-5-network-zones/
 
 ### Screenshot Organization
 
-All screenshots should be renamed according to the naming convention above and saved to the `screenshots/` directory. Below is the mapping from your original documentation to the new organized structure:
+All screenshots are organized in the `screenshots/` directory with descriptive filenames. Below is the complete mapping:
 
-| Original Reference | New Filename | Description |
-|-------------------|--------------|-------------|
-| image.png | 01-krista-scott-user-creation.png | Krista Scott added to User Directory |
-| image 1.png | 02-krista-scott-logged-in.png | Krista logged into OKTA account |
-| image 2.png | 03-pilot-users-group.png | Pilot Users group with Krista |
-| image 3.png | 04-corporate-network-zone-creation.png | Corporate Network IP Zone creation |
-| image 4.png | 05-authentication-activity-report.png | Country/Region identified as United States |
-| image 5.png | 06-allowed-countries-zone.png | Dynamic Network Zone for Allowed Countries |
-| image 6.png | 07-okta-verify-push-config.png | OKTA Verify Push notification configuration |
-| image 7.png | 08-restricted-countries-rule.png | Restricted Countries policy rule |
-| image 8.png | 09-public-network-rule.png | Public Network policy rule |
-| image 9.png | 10-corporate-network-rule.png | Corporate Network policy rule |
-| image 10.png | 11-corporate-network-ip-change.png | Corporate Network IP changed for testing |
-| image 11.png | 12-public-network-log.png | System Log showing Public Network Rule |
-| image 12.png | 13-corporate-network-log.png | System Log showing Corporate Network Rule |
-| image 13.png | 14-tor-blocking-zone.png | Block Tor Anonymizer Proxies Zone |
-| image 14.png | 15-tor-403-forbidden.png | 403 Access Forbidden from Tor Browser |
-| image 15.png | 16-tor-blocking-logs.png | System Log showing blocked Tor attempts |
-
-### Screenshot Caption Template
-
-When referencing screenshots in documentation, use this format:
-
-```markdown
-![Screenshot Title](../../../assets/images/screenshots/phase-5/[filename])
-*Figure X: Detailed caption explaining what the screenshot demonstrates, including the specific configuration shown and its relevance to the implementation. Captions should be professional and informative without casual elements.*
-```
-
----
-
-## Video Recordings
-
-### Video 1: Public Network Authentication Flow
-
-**Filename:** `public-network-authentication-flow.mp4`
-
-**Demonstrates:**
-- Corporate Network zone set to non-matching IP (10.10.10.10)
-- Login as krista.scott user
-- OKTA Verify TOTP option NOT available (hardware protection requirement)
-- Push notification as only available verification method
-- Successful authentication after push approval
-- System Log confirmation of Public Network Rule evaluation
-
-**Duration:** Approximately 1-2 minutes  
-**Key Insight:** Hardware-protected factor requirement restricts authentication methods
-
-### Video 2: Corporate Network Authentication Flow
-
-**Filename:** `corporate-network-authentication-flow.mp4`
-
-**Demonstrates:**
-- Corporate Network zone set to actual IP address
-- Login as krista.scott user
-- "Verify with something else" option selection
-- OKTA Verify TOTP available as verification method
-- Multiple authentication method options (Push, TOTP, FastPass)
-- Successful authentication using TOTP code
-- System Log confirmation of Corporate Network Rule evaluation
-
-**Duration:** Approximately 1-2 minutes  
-**Key Insight:** Corporate network access provides expanded authentication method flexibility
+| Filename | Description |
+|----------|-------------|
+| 01-krista-scott-user-creation.png | Test user (Krista Scott) added to OKTA User Directory |
+| 02-krista-scott-logged-in.png | Successful login validation with OKTA Verify |
+| 03-pilot-users-group.png | Pilot Users group creation with Krista as member |
+| 04-corporate-network-zone-creation.png | Corporate Network IP Zone configuration |
+| 05-authentication-activity-report.png | Authentication Activity report showing United States |
+| 06-allowed-countries-zone.png | Allowed Countries Dynamic Zone configuration |
+| 07-okta-verify-push-config.png | OKTA Verify Push notification enablement |
+| 08-restricted-countries-rule.png | Restricted Countries rule (Priority 1) |
+| 09-public-network-rule.png | Public Network rule (Priority 2) |
+| 10-corporate-network-rule.png | Corporate Network rule (Priority 3) |
+| 11-corporate-network-ip-change.png | IP address change for testing (10.10.10.10) |
+| 12-public-network-log.png | System Log showing Public Network Rule evaluation |
+| 13-corporate-network-log.png | System Log showing Corporate Network Rule evaluation |
+| 14-tor-blocking-zone.png | Block Tor Anonymizer Proxies zone configuration |
+| 15-tor-403-forbidden.png | 403 Forbidden error when accessing from Tor |
+| 16-tor-blocking-logs.png | System Log showing anonymizing proxy detection |
 
 ---
 
@@ -417,6 +423,17 @@ Frequent network transitions could cause authentication method inconsistency. Po
 
 ---
 
+## Video Resources
+
+**Watch the complete authentication demonstrations:**
+
+🎬 **Public Network Flow:** [https://youtu.be/qLD-tUc5B5Y](https://youtu.be/qLD-tUc5B5Y)  
+🎬 **Corporate Network Flow:** [https://youtu.be/JpR_oS2XjQc](https://youtu.be/JpR_oS2XjQc)
+
+These videos provide visual validation of the network-based conditional access implementation and demonstrate the actual user experience across different network contexts.
+
+---
+
 ## Contact and Support
 
 **Implementation Author:** Noble W. Antwi  
@@ -447,4 +464,5 @@ Frequent network transitions could cause authentication method inconsistency. Po
 
 **Last Updated:** December 2024  
 **Version:** 1.0  
-**Status:** Phase 5.1 COMPLETE
+**Status:** Phase 5.1 COMPLETE  
+**Video Demonstrations:** Available on YouTube (Unlisted)
