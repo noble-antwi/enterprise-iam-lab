@@ -4,6 +4,8 @@
 
 I established the foundational infrastructure for a hybrid identity management environment, implementing Active Directory Domain Services on Windows Server 2022 and provisioning an OKTA Integrator tenant for cloud identity services. The implementation includes split-brain DNS architecture, alternative UPN suffix configuration, and initial OKTA customization.
 
+**Business Context:** This foundation serves Biira Bank's requirement for a regulated hybrid identity platform. As a state-chartered commercial bank subject to FFIEC IT examination procedures, the infrastructure must demonstrate auditable configuration management, network segmentation aligned with PCI-DSS Requirement 1, and a clear separation between internal directory services and externally-facing authentication surfaces.
+
 **Key Achievements:**
 - Deployed Windows Server 2022 as primary domain controller (srv1)
 - Established Active Directory domain: *ad.biira.online*
@@ -52,7 +54,7 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet 2" `
 - **Gateway:** 192.168.50.1
 - **Initial DNS:** External resolvers (reconfigured post-AD installation)
 
-**Rationale:** Static IP ensures consistent domain controller accessibility. VLAN segmentation follows enterprise network design principles for security and traffic isolation.
+**Rationale:** Static IP ensures consistent domain controller accessibility. VLAN segmentation follows enterprise network design principles for security and traffic isolation, aligning with PCI-DSS Requirement 1 for network segmentation and FFIEC expectations for isolating identity infrastructure from general-purpose network traffic.
 
 ![Network Configuration](../../../assets/images/screenshots/phase-1/01-network-config-static-ip.png.png)
 
@@ -104,7 +106,7 @@ Install-ADDSForest `
 - **Global Catalog:** Yes (first DC in forest)
 
 **Design Decision - Domain Naming:**
-I chose `ad.biira.online` as the internal domain rather than using the public domain `biira.online` directly. This split-brain DNS approach is enterprise-standard, separating internal infrastructure (ad.biira.online) from public-facing identity (biira.online), which becomes the UPN suffix for user accounts.
+I chose `ad.biira.online` as the internal domain rather than using the public domain `biira.online` directly. This split-brain DNS approach is enterprise-standard, separating internal infrastructure (ad.biira.online) from public-facing identity (biira.online), which becomes the UPN suffix for user accounts. For a regulated financial institution, this separation also supports GLBA Safeguards Rule requirements by ensuring that internal directory infrastructure is not directly exposed to external authentication flows.
 
 ### Post-Promotion DNS Configuration
 
@@ -562,7 +564,7 @@ I successfully established the foundational infrastructure for a hybrid identity
 4. VLAN segmentation (management traffic isolation)
 5. PowerShell automation (repeatability and documentation)
 
-The environment is now ready for Phase 2: Active Directory organizational structure implementation, including OU design, security groups, and user provisioning.
+The environment is now ready for Phase 2: Active Directory organizational structure implementation, including OU design, security groups, and user provisioning. From an FFIEC IT examination perspective, the foundation demonstrates documented configuration management, network segmentation controls, and a repeatable deployment process -- establishing the audit trail expected of a regulated financial institution's identity infrastructure.
 
 ---
 

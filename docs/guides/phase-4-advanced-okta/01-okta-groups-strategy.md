@@ -290,7 +290,7 @@ Import Statistics:
 ### Hybrid Group Architecture
 
 **Multi-Source Group Management:**
-The implementation establishes a sophisticated hybrid approach combining AD-sourced groups for organizational structure with OKTA-mastered groups for business logic.
+The implementation establishes a sophisticated hybrid approach combining AD-sourced groups for organizational structure with OKTA-mastered groups for business logic. In a banking context, this hybrid model allows the bank to maintain regulatory-grade AD group controls for SOX separation of duties while leveraging OKTA-native groups for dynamic access decisions that FFIEC examiners expect to see in modern financial institution identity architectures.
 
 **Group Source Strategy:**
 ```
@@ -319,7 +319,7 @@ Planned Geographic Expansion:
 ├── OG-Location-EMEA: Europe, Middle East, Africa
 │   ├── Countries: DE, FR, GB, NL, CH, AE, ZA, etc.
 │   ├── Expression: user.countryCode IN ["DE","FR","GB",...] 
-│   ├── Compliance: GDPR data residency requirements
+│   ├── Compliance: Regional data residency requirements
 │   └── Applications: Region-specific SaaS licensing
 │
 ├── OG-Location-APAC: Asia-Pacific Region
@@ -414,12 +414,12 @@ Data Protection:
 
 **Regulatory Compliance Support:**
 ```
-GDPR Compliance (European Users):
-├── Data Residency: Automatic assignment to EMEA applications
-├── Processing Limitation: Location data used only for business purposes
-├── Right to Rectification: Country changes automatically update group membership
-├── Audit Trail: Complete record of all automatic assignments
-└── Data Minimization: Only necessary location data used
+GLBA and BSA/AML Compliance:
+├── Geographic Controls: Location-based access supports BSA/AML geographic risk monitoring
+├── Access Governance: Automated assignment provides auditable access decisions for FFIEC examination
+├── Right to Modify: Country changes automatically update group membership and access scope
+├── Audit Trail: Complete record of all automatic assignments for regulatory evidence
+└── Data Minimization: Only necessary location data used for access control decisions
 
 SOC 2 Type II Controls:
 ├── Access Control: Systematic, rule-based application access
@@ -428,12 +428,12 @@ SOC 2 Type II Controls:
 ├── Monitoring: Real-time group assignment tracking
 └── Review Process: Regular validation of access control effectiveness
 
-Industry-Specific Requirements:
-├── Financial Services: Geographic trading restrictions supported
-├── Healthcare: Regional HIPAA compliance through location-based access
-├── Government: Citizenship-based access control for classified systems
-├── Education: FERPA compliance through geographic student data protection
-└── Technology: Export control compliance through citizenship validation
+Financial Services Regulatory Requirements:
+├── BSA/AML: Geographic access controls support transaction monitoring and suspicious activity reporting
+├── GLBA: Location-based data access restrictions protect customer financial information
+├── FFIEC: Automated group assignment demonstrates systematic access governance
+├── SOX: Rule-based access decisions support Section 404 control documentation
+└── PCI-DSS: Geographic restrictions support network segmentation and access control requirements
 ```
 
 ---

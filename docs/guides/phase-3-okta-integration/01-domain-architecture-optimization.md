@@ -9,7 +9,7 @@ Following the successful core OKTA integration documented in 00-implementation-s
 **Strategic Achievement:**
 - Migrated OKTA SSO portal from `www.biira.online` to `login.biira.online`
 - Freed primary domain for future business website development
-- Implemented Fortune 500-standard domain architecture
+- Implemented financial services enterprise-standard domain architecture
 - Maintained seamless user authentication experience during transition
 - Established scalable subdomain strategy for future service expansion
 
@@ -63,7 +63,7 @@ Business Domains:
 Identity Domain:
 ├── Primary Use: Authentication and SSO services
 ├── User Clarity: Obviously dedicated to login functionality
-├── Professional Standard: Matches Fortune 500 patterns
+├── Professional Standard: Matches financial services enterprise patterns
 └── Technical Independence: Vendor-agnostic subdomain structure
 ```
 
@@ -215,6 +215,8 @@ OKTA SSL Management:
 
 ## Business Value and Strategic Impact
 
+For a regulated financial institution, domain architecture separation is not merely a branding exercise. FFIEC examiners expect clear delineation between customer-facing web properties and authentication surfaces, and this separation ensures that the bank's SSO infrastructure operates on a dedicated, auditable subdomain independent of marketing and public-facing content.
+
 ### Domain Portfolio Optimization
 
 **Before Implementation:**
@@ -249,7 +251,7 @@ User Journey Improvement:
 
 ### Enterprise Architecture Alignment
 
-**Fortune 500 Standard Practices:**
+**Financial Services Enterprise Practices:**
 ```
 Industry Pattern Matching:
 ├── Microsoft: www.microsoft.com + login.microsoftonline.com
@@ -395,7 +397,7 @@ The domain architecture optimization represents a strategic enhancement that tra
 
 **Key Achievements:**
 - **Strategic Domain Management**: Professional separation of identity and business services
-- **Enterprise Alignment**: Implementation matches Fortune 500 domain architecture patterns
+- **Enterprise Alignment**: Implementation matches financial services enterprise domain architecture patterns
 - **Future Enablement**: Primary domain available for comprehensive business website development
 - **Technical Excellence**: Flawless DNS configuration and OKTA integration
 - **User Experience**: Professional, intuitive login URL that enhances brand perception

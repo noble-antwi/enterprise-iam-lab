@@ -1,20 +1,40 @@
 # Enterprise IAM Lab: Hybrid Identity Architecture
 
-> **Building production-ready Identity and Access Management skills through hands-on implementation**  
-> A comprehensive homelab demonstrating enterprise-grade IAM integration using Active Directory, OKTA, and Microsoft Entra ID
+> **Building regulatory-grade hybrid identity architecture for financial services**
+> A comprehensive homelab demonstrating enterprise-grade IAM integration using Active Directory, OKTA, and Microsoft Entra ID for a regulated commercial bank
 
 [![Lab Status](https://img.shields.io/badge/Status-Phase%205.1%20Complete-brightgreen)]()
 [![AD Domain](https://img.shields.io/badge/AD%20Domain-ad.biira.online-blue)]()
 [![OKTA](https://img.shields.io/badge/OKTA-Integrator%20Tenant-00297A)]()
 [![SSO Domain](https://img.shields.io/badge/SSO-login.biira.online-orange)]()
+[![Industry](https://img.shields.io/badge/Industry-Financial%20Services-darkgreen)]()
 
 ---
 
 ## Project Vision
 
-This repository chronicles my journey building a **500-1000 user enterprise IAM environment** from scratch. The lab simulates a medium-sized organization's identity infrastructure, implementing industry best practices for hybrid identity, zero-trust security, and modern access management.
+This repository chronicles my journey building a **500-1000 user enterprise IAM environment** from scratch. The lab simulates a state-chartered commercial bank's identity infrastructure, implementing financial services regulatory standards for hybrid identity, zero-trust security, and modern access management.
 
-**Real-World Application**: Every configuration, script, and architectural decision mirrors production enterprise environments - making this directly applicable to Fortune 500 IAM implementations.
+**Real-World Application**: Every configuration, script, and architectural decision mirrors production banking environments - making this directly applicable to financial services IAM implementations.
+
+---
+
+## Organization Profile
+
+Biira Bank is a state-chartered commercial bank headquartered in Charlotte, North Carolina. As an FDIC-insured, NASDAQ-listed institution, the bank operates under dual regulatory oversight from the North Carolina Commissioner of Banks and the FDIC, with additional SEC reporting and Sarbanes-Oxley compliance obligations.
+
+The IAM architecture implemented in this project is driven by the following regulatory framework:
+
+| Regulation | Oversight Body | IAM Relevance |
+|-----------|---------------|---------------|
+| GLBA Safeguards Rule | FTC / FDIC | Access controls, MFA, customer data encryption |
+| Sarbanes-Oxley (SOX) | SEC / PCAOB | Separation of duties, privileged access, audit trails |
+| PCI-DSS v4.0 | PCI SSC | Unique user IDs, MFA for admin access, RBAC, network segmentation |
+| FFIEC Auth Guidance (2021) | FFIEC | Risk-based auth, conditional access, network zones, anomaly monitoring |
+| BSA/AML | FinCEN / FDIC | Geographic restrictions, transaction monitoring access controls |
+| SOC 2 Type II | AICPA | Security, availability, processing integrity controls |
+
+For the complete organization profile, see [docs/company-profile/00-company-profile.md](../../docs/company-profile/00-company-profile.md).
 
 ---
 
@@ -23,60 +43,62 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 ### Hybrid Identity Design
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    INTERNET / CLOUD                         │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │         Network-Based Conditional Access             │  │
-│  │  ┌────────────────────────────────────────────────┐  │  │
-│  │  │ Network Zones (Phase 5.1)                      │  │  │
-│  │  │ - Corporate Network (IP Zone)                  │  │  │
-│  │  │ - Allowed Countries (Geographic)               │  │  │
-│  │  │ - Tor Blocking (Threat Intelligence)          │  │  │
-│  │  └────────────────────────────────────────────────┘  │  │
-│  │  ┌────────────────────────────────────────────────┐  │  │
-│  │  │ Authentication Policies                        │  │  │
-│  │  │ Priority 1: Restricted Countries (DENY)        │  │  │
-│  │  │ Priority 2: Public Network (Hardware MFA)      │  │  │
-│  │  │ Priority 3: Corporate Network (Standard MFA)   │  │  │
-│  │  └────────────────────────────────────────────────┘  │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                                                             │
-│  ┌──────────────┐              ┌──────────────────────┐   │
-│  │   OKTA       │◄────────────►│  Microsoft Entra ID  │   │
-│  │  (Primary    │   Federation │    (Azure AD)        │   │
-│  │   IdP)       │              │                      │   │
-│  │              │              │                      │   │
-│  │ Applications │              │  Microsoft 365       │   │
-│  │ ├─ Dropbox   │              │  Integration         │   │
-│  │ └─ Box       │              │                      │   │
-│  └──────┬───────┘              └──────────────────────┘   │
-│         │                                                   │
-│         │ OKTA AD Agent                                    │
-│         │ (Secure Tunnel)                                  │
-└─────────┼───────────────────────────────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 ON-PREMISES HOMELAB                         │
-│                                                             │
-│  ┌────────────────────────────────────────────────────┐   │
-│  │  Active Directory Domain: ad.biira.online          │   │
-│  │  UPN Suffix: biira.online                          │   │
-│  │  SSO Portal: login.biira.online                    │   │
-│  │                                                    │   │
-│  │  ┌──────────────┐         ┌──────────────────┐   │   │
-│  │  │   srv1       │         │  Future:         │   │   │
-│  │  │  (Domain     │         │  - srv2 (Replica │   │   │
-│  │  │   Controller)│         │    DC)           │   │   │
-│  │  │              │         │  - CA Server     │   │   │
-│  │  │  192.168.50.2│         │  - ADFS (if req) │   │   │
-│  │  └──────────────┘         └──────────────────┘   │   │
-│  │                                                    │   │
-│  └────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Network: 192.168.50.0/24 (Management VLAN)                │
-└─────────────────────────────────────────────────────────────┘
++-----------------------------------------------------------------+
+|                    INTERNET / CLOUD                               |
+|                                                                   |
+|  +------------------------------------------------------------+  |
+|  |         Network-Based Conditional Access                    |  |
+|  |  +------------------------------------------------------+  |  |
+|  |  | Network Zones (Phase 5.1)                             |  |  |
+|  |  | - Corporate Network (IP Zone)                         |  |  |
+|  |  | - Allowed Countries (Geographic)                      |  |  |
+|  |  | - Tor Blocking (Threat Intelligence)                  |  |  |
+|  |  +------------------------------------------------------+  |  |
+|  |  +------------------------------------------------------+  |  |
+|  |  | Authentication Policies                               |  |  |
+|  |  | Priority 1: Restricted Countries (DENY)               |  |  |
+|  |  | Priority 2: Public Network (Hardware MFA)             |  |  |
+|  |  | Priority 3: Corporate Network (Standard MFA)          |  |  |
+|  |  +------------------------------------------------------+  |  |
+|  +------------------------------------------------------------+  |
+|                                                                   |
+|  +----------------+              +------------------------+      |
+|  |   OKTA         |<------------>|  Microsoft Entra ID    |      |
+|  |  (Primary      |   Federation |    (Azure AD)          |      |
+|  |   IdP)         |              |                        |      |
+|  |                |              |                        |      |
+|  | Applications   |              |  Microsoft 365         |      |
+|  | +- Dropbox     |              |  Integration           |      |
+|  | +- Box         |              |                        |      |
+|  +-------+--------+              +------------------------+      |
+|          |                                                        |
+|          | OKTA AD Agent                                          |
+|          | (Secure Tunnel)                                        |
++----------+--------------------------------------------------------+
+           |
+           v
++-----------------------------------------------------------------+
+|                 ON-PREMISES HOMELAB                               |
+|                                                                   |
+|  +------------------------------------------------------------+  |
+|  |  Active Directory Domain: ad.biira.online                  |  |
+|  |  UPN Suffix: biira.online                                  |  |
+|  |  SSO Portal: login.biira.online                            |  |
+|  |  Identity Consumers: Retail Banking | Commercial Banking   |  |
+|  |    | Wealth Advisory | Digital Banking                     |  |
+|  |                                                             |  |
+|  |  +----------------+         +--------------------+         |  |
+|  |  |   srv1          |         |  Future:           |         |  |
+|  |  |  (Domain        |         |  - srv2 (Replica   |         |  |
+|  |  |   Controller)   |         |    DC)             |         |  |
+|  |  |                 |         |  - CA Server       |         |  |
+|  |  |  192.168.50.2   |         |  - ADFS (if req)   |         |  |
+|  |  +----------------+         +--------------------+         |  |
+|  |                                                             |  |
+|  +------------------------------------------------------------+  |
+|                                                                   |
+|  Network: 192.168.50.0/24 (Management VLAN)                     |
++-----------------------------------------------------------------+
 ```
 
 **Phase 5 Enhancement:** Network-based conditional access policies now enforce location-aware authentication requirements, with differentiated security controls for corporate versus public network access. Geographic restrictions and Tor blocking provide additional layers of defense.
@@ -84,6 +106,14 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 ---
 
 ## Project Phases
+
+| Phase | Focus | Regulatory Driver | Status |
+|-------|-------|-------------------|--------|
+| **Phase 1** | Foundation -- Windows Server, AD DS, DNS, Okta tenant setup | FFIEC IT Examination, PCI-DSS Req. 1 | Complete |
+| **Phase 2** | AD Structure -- Tiered admin model, OUs, security groups | SOX separation of duties, FFIEC privileged access | Complete |
+| **Phase 3** | Okta Integration -- AD agent, provisioning, attribute mapping | GLBA Safeguards Rule, FFIEC cloud guidance | Complete |
+| **Phase 4** | Advanced Okta -- SAML/SWA apps, group push, lifecycle management | SOX automated controls, GLBA least-privilege | Complete |
+| **Phase 5** | Advanced Security -- Network zones, conditional access, MFA policies | FFIEC authentication guidance, BSA/AML | In Progress |
 
 ### Phase 1: Foundation (COMPLETE)
 - [x] Windows Server 2022 deployment (srv1.ad.biira.online)
@@ -175,8 +205,8 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 - Defense-in-depth security with graduated MFA requirements
 
 **Video Demonstrations:**
-- 🎬 [Public Network Authentication Flow](https://youtu.be/qLD-tUc5B5Y) - Hardware-protected MFA for untrusted networks
-- 🎬 [Corporate Network Authentication Flow](https://youtu.be/JpR_oS2XjQc) - Expanded methods for trusted networks
+- **Video - Public Network Flow:** [Public Network Authentication Flow](https://youtu.be/qLD-tUc5B5Y) - Hardware-protected MFA for untrusted networks
+- **Video - Corporate Network Flow:** [Corporate Network Authentication Flow](https://youtu.be/JpR_oS2XjQc) - Expanded methods for trusted networks
 
 **Documentation:**
 - `docs/guides/phase-5-advanced-security/00-phase-5-overview.md`
@@ -197,12 +227,12 @@ This repository chronicles my journey building a **500-1000 user enterprise IAM 
 ## Implementation Progress
 
 ```
-Phase 1: Foundation                ████████████████████ 100% 
-Phase 2: AD Structure             ████████████████████ 100% 
-Phase 3: OKTA Integration         ████████████████████ 100% 
-Phase 4: Advanced Configuration   ████████████████████ 100% 
-Phase 5: Advanced Security        ████████░░░░░░░░░░░░  40% (Component 5.1 Complete)
-Phase 6: Microsoft Entra ID       ░░░░░░░░░░░░░░░░░░░░   0% 
+Phase 1: Foundation                %%%%%%%%%%%%%%%%%%%% 100%
+Phase 2: AD Structure             %%%%%%%%%%%%%%%%%%%% 100%
+Phase 3: OKTA Integration         %%%%%%%%%%%%%%%%%%%% 100%
+Phase 4: Advanced Configuration   %%%%%%%%%%%%%%%%%%%% 100%
+Phase 5: Advanced Security        %%%%%%%%____________  40% (Component 5.1 Complete)
+Phase 6: Microsoft Entra ID       ____________________   0%
 ```
 
 **Current Status:** Network-Based Conditional Access Operational  
@@ -268,13 +298,13 @@ By following this lab, you'll master:
 - **Geographic Controls**: Dynamic zones, country-level restrictions
 - **Threat Intelligence**: Anonymous proxy detection, Tor blocking
 
-### Enterprise Best Practices
+### Financial Services Enterprise Standards
 - Split-brain DNS for hybrid environments
 - Tiered admin model (Privileged Access Workstation principles)
 - Dual-account pattern for administrative access
 - Naming conventions and documentation standards
 - Change management and rollback procedures
-- Audit compliance (SOC 2, HIPAA, PCI-DSS considerations)
+- Regulatory compliance (GLBA, SOX, PCI-DSS, FFIEC, BSA/AML)
 - Expression Language for dynamic business logic
 - Cross-protocol application integration strategies
 - Zero-trust security architecture principles
@@ -318,11 +348,11 @@ By following this lab, you'll master:
 - **Service account passwords**: Referenced in documentation, never committed
 - **OKTA tenant details**: Masked in screenshots and configs
 - **IP addresses**: Use your own network ranges
-- **Real-world ready**: All configurations based on enterprise best practices
+- **Real-world ready**: All configurations based on financial services enterprise standards
 
 ### Lab vs Production
 
-While this lab follows enterprise best practices, remember:
+While this lab follows financial services enterprise standards, remember:
 - Homelab environments lack physical security controls
 - Not all configurations scale to 10,000+ users without optimization
 - Some features require enterprise licensing (Entra ID P2, OKTA Workforce Identity)
@@ -354,8 +384,8 @@ This is a learning project, but feedback is welcome!
 
 ## Author
 
-**Noble W. Antwi**  
-Enterprise IAM Lab - A comprehensive learning journey in hybrid identity architecture
+**Noble W. Antwi**
+Enterprise IAM Lab - Building regulatory-grade hybrid identity architecture for financial services
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://www.linkedin.com/in/your-profile)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/noble-antwi)
@@ -379,4 +409,4 @@ This project is for educational purposes. Configurations and scripts are provide
 
 **Last Updated:** December 2024  
 **Current Phase:** 5.1 (Network-Based Conditional Access) - COMPLETE  
-**Documentation Standard:** Enterprise Production Grade
+**Documentation Standard:** Financial Services Enterprise Grade

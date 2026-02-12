@@ -379,23 +379,23 @@ SSO Application Expectations:
 
 **Attribute Utilization by System Type:**
 ```
-HR Applications:
-├── Required: Full name, email, employee ID
+Core Banking Applications:
+├── Required: Full name, email, employee ID, branch assignment
 ├── Optional: Department, title, manager, start date
-├── Compliance: Cost center, location, employment status
-└── Integration: Bi-directional sync considerations
+├── Compliance: Cost center, location, BSA/AML role designation
+└── Integration: Bi-directional sync considerations with HR systems
 
-Collaboration Platforms:
-├── Display: First name, last name, nickname
+Document Management and Collaboration:
+├── Display: First name, last name, department
 ├── Communication: Email, phone, instant messaging handles
-├── Personalization: Profile pictures, status messages
+├── Access Control: Department-level DLP policy integration
 └── Directory: Department, title, manager hierarchy
 
-Security Systems:
+Security and Compliance Systems:
 ├── Identity: Full name, employee ID, UPN
-├── Authorization: Group memberships, roles, clearances
-├── Audit: Manager approval chain, cost center
-└── Compliance: Location, citizenship, background check status
+├── Authorization: Group memberships, roles, regulatory access levels
+├── Audit: Manager approval chain, cost center, SOX control mappings
+└── Compliance: Branch location, NMLS ID (if applicable), background check status
 ```
 
 ### API and Integration Architecture
@@ -431,24 +431,24 @@ SCIM Provisioning:
 
 ### Data Privacy and Protection
 
-**GDPR Compliance:**
+**GLBA and FFIEC Compliance:**
 ```
 Data Minimization Principle:
-├── Mapped Attributes: Only essential business requirements
-├── Personal Data: Limited to professional identity needs
-├── Consent: Employee consent for profile synchronization
-├── Right to Rectification: Corrections made in AD source system
-└── Data Portability: Profile export capabilities via OKTA APIs
+├── Mapped Attributes: Only essential business requirements per GLBA Safeguards Rule
+├── Personal Data: Limited to professional identity needs for banking operations
+├── Access Governance: Attribute access controlled through OKTA policy framework
+├── Audit Trail: All attribute mapping changes documented for FFIEC examination
+└── Data Integrity: Source-of-truth maintained in on-premises AD per regulatory expectations
 ```
 
-**Data Classification:**
+**Biira Bank Data Classification Framework:**
 ```
 Attribute Sensitivity Levels:
 ├── Public: firstName, lastName, department, title
 ├── Internal: email, phone, manager, employee ID
-├── Confidential: salary, social security number, home address
-├── Restricted: Security clearances, medical information
-└── Mapping Policy: Only public and internal data synchronized
+├── Confidential: salary, account numbers, customer data
+├── Restricted: Social security numbers, medical information, BSA/AML investigation data
+└── Mapping Policy: Only Public and Internal data synchronized to cloud directory
 ```
 
 ### Audit Documentation

@@ -4,6 +4,8 @@
 
 I designed and implemented an enterprise-grade Active Directory organizational structure following Microsoft's tiered administrative model and industry best practices. The implementation includes 20 organizational units (OUs), 9 security groups for OKTA integration, and 27 test user accounts representing a realistic corporate environment.
 
+**Regulatory Drivers:** For a state-chartered commercial bank, the AD structure directly addresses SOX Section 404 requirements for separation of duties, GLBA Safeguards Rule mandates for access control governance, and FFIEC expectations for privileged account management. The tiered administrative model maps to the bank's obligation to demonstrate auditable role-based controls during regulatory examinations.
+
 **Key Achievements:**
 - Implemented tiered administrative model (Tier 0/1/2) for enhanced security
 - Designed scalable OU structure supporting 500-1000 user growth
@@ -17,7 +19,7 @@ I designed and implemented an enterprise-grade Active Directory organizational s
 
 ### Design Rationale
 
-I structured the Active Directory environment with a custom root OU named "BIIRA" to isolate all enterprise objects from default AD containers. This design follows Microsoft's recommended practice of separating production objects for cleaner Group Policy inheritance and administrative delegation.
+I structured the Active Directory environment with a custom root OU named "BIIRA" to isolate all enterprise objects from default AD containers. This design follows Microsoft's recommended practice of separating production objects for cleaner Group Policy inheritance and administrative delegation. For regulatory audit purposes, the dedicated root OU provides a single searchable boundary for all bank identity objects, simplifying FFIEC IT examination evidence collection and SOX access control reporting.
 
 ### Implemented Hierarchy
 
@@ -136,7 +138,7 @@ foreach ($dept in $departments) {
 }
 ```
 
-These groups provide the foundation for RBAC, resource permissions, and application access management.
+These groups provide the foundation for RBAC, resource permissions, and application access management. In a banking context, department-level group scoping supports GLBA requirements for limiting access to customer financial data to only those employees with a legitimate business need.
 
 ### Implementation Results
 
@@ -366,9 +368,9 @@ All validation checks passed successfully, confirming proper implementation.
 ### Implemented Security Controls
 
 **1. Tiered Administrative Model**
-- Tier 0: Domain controllers, forest admins (highest privilege)
-- Tier 1: Server infrastructure administrators
-- Tier 2: Workstation support staff (lowest privilege)
+- Tier 0: Domain controllers, forest admins (highest privilege) -- maps to SOX separation of duties for domain-level controls
+- Tier 1: Server infrastructure administrators -- aligns with GLBA Safeguards Rule requirements for application-level access boundaries and PCI-DSS Requirement 7 for role-based access
+- Tier 2: Workstation support staff (lowest privilege) -- supports FFIEC expectations for least-privilege help desk operations in a banking environment
 - Prevents privilege escalation and lateral movement attacks
 
 **2. OU Protection**

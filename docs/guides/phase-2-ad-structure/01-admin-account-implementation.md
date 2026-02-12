@@ -4,6 +4,8 @@
 
 Following the completion of employee user provisioning, I implemented Microsoft's Tiered Administrative Model to establish privileged account separation. This implementation created 7 administrative accounts across three security tiers, applied advanced security hardening, and deactivated the built-in Administrator account in accordance with enterprise security best practices.
 
+**Regulatory Context:** The dual-account pattern and tiered privilege model are direct responses to SOX Section 302/404 requirements for separation of duties and FFIEC expectations that regulated financial institutions maintain individually attributable privileged access with auditable boundaries between administrative tiers.
+
 **Key Achievements:**
 - Implemented three-tier administrative structure (Tier 0/1/2)
 - Created 7 dedicated administrative accounts with enhanced security controls
@@ -244,6 +246,8 @@ The script creates admin accounts for IT staff who need server management capabi
 
 ### Tier 1 Privilege Scope
 
+In a banking environment, Tier 1 accounts manage the application infrastructure that processes customer financial data, making their scope directly relevant to GLBA Safeguards Rule access controls and PCI-DSS Requirement 7 for restricting access to cardholder data systems.
+
 **CAN DO:**
 - Install and configure member servers
 - Manage IIS, SQL Server, application servers
@@ -345,7 +349,7 @@ Resolution: chris.garcia-ws (16 characters)  SUCCESS
 
 ### Why Tier 2?
 
-Help desk staff need limited administrative rights for user support without exposing infrastructure. Tier 2 provides password reset and workstation management without server or domain access.
+Help desk staff need limited administrative rights for user support without exposing infrastructure. Tier 2 provides password reset and workstation management without server or domain access. In a banking context, Tier 2 staff handle branch employee workstation issues and password resets without gaining access to core banking systems or customer data repositories.
 
 **Security Benefit:** If Tier 2 account compromised, attacker cannot pivot to servers or domain controllers.
 
@@ -489,7 +493,7 @@ DistinguishedName : CN=Administrator,CN=Users,DC=ad,DC=biira,DC=online
 
 ### Enterprise Standard Practice
 
-Most Fortune 500 companies disable built-in Administrator:
+Most financial services enterprises disable built-in Administrator:
 
 ```
 Microsoft's Recommendation:
