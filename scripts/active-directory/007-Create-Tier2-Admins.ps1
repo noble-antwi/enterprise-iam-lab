@@ -5,24 +5,26 @@ $domainDN = "DC=ad,DC=biira,DC=online"
 $tier2OU = "OU=Tier2-WorkstationAdmins,OU=Admin,OU=BIIRA,$domainDN"
 
 # Define Tier 2 administrators (help desk / desktop support)
+# Username field is explicitly defined to handle AD SAM account name 20-character limit
 $tier2Admins = @(
-    @{FirstName="Christopher"; LastName="Garcia"; Title="Security Analyst"},
-    @{FirstName="Justin"; LastName="Hill"; Title="Cloud Architect"}
+    @{FirstName="Christopher"; LastName="Garcia"; Title="Security Analyst"; Username="chris.garcia-ws"},
+    @{FirstName="Justin"; LastName="Hill"; Title="Cloud Architect"; Username="justin.hill-ws"}
 )
 
 Write-Host "`n=== Creating Tier 2 Workstation Admin Accounts ===" -ForegroundColor Cyan
 
 foreach ($admin in $tier2Admins) {
-    $username = "$($admin.FirstName.ToLower()).$($admin.LastName.ToLower())-ws"
-    
+
+    $username = if ($admin.Username) { $admin.Username } else { "$($admin.FirstName.ToLower()).$($admin.LastName.ToLower())-ws" }
+
     # Check if account already exists
     $exists = Get-ADUser -Filter "SamAccountName -eq '$username'" -ErrorAction SilentlyContinue
-    
+
     if ($exists) {
         Write-Host "Already exists: $username" -ForegroundColor Yellow
         continue
     }
-    
+
     try {
         # Create admin account
         New-ADUser -Name "$($admin.FirstName) $($admin.LastName) (Workstation Admin)" `
@@ -38,16 +40,16 @@ foreach ($admin in $tier2Admins) {
                    -Enabled $true `
                    -ChangePasswordAtLogon $true `
                    -PasswordNeverExpires $false
-        
+
         # Add to Tier 2 group
         Add-ADGroupMember -Identity "SG-Tier2-WorkstationAdmins" -Members $username
-        
+
         Write-Host "Created: $username" -ForegroundColor Green
-        
+
     } catch {
         Write-Host "Failed: $username - $($_.Exception.Message)" -ForegroundColor Red
     }
-    
+
     Start-Sleep -Milliseconds 200
 }
 
