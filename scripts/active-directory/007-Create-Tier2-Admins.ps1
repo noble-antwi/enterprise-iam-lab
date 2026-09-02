@@ -1,5 +1,5 @@
 # Create Tier 2 Workstation Admin Accounts
-# Run this on srv1 as Domain Admin
+# Run this on DC01 as Domain Admin
 
 $domainDN = "DC=ad,DC=biira,DC=online"
 $tier2OU = "OU=Tier2-WorkstationAdmins,OU=Admin,OU=BIIRA,$domainDN"

@@ -16,7 +16,7 @@ I successfully implemented OKTA Active Directory Agent integration, establishing
 - Phase 3.5: User lifecycle management (04-user-lifecycle-management.md)
 
 **Critical Implementation Results:**
-- Installed and configured OKTA AD Agent 3.21.0 on srv1 domain controller
+- Installed and configured OKTA AD Agent 3.21.0 on DC01 domain controller
 - Established secure HTTPS communication channel to OKTA cloud tenant
 - Synchronized 27 employee user accounts (100% of employee population)
 - Imported 12 security groups for departmental role-based access control
@@ -66,7 +66,7 @@ The implementation establishes a secure synchronization bridge between Active Di
 ┌─────────────────────▼───────────────────────────────────────┐
 │              ON-PREMISES ACTIVE DIRECTORY                   │
 │                 Domain: ad.biira.online                     │
-│                    DC: srv1                                 │
+│                    DC: DC01                                 │
 │                                                             │
 │  SYNCHRONIZED SCOPE (Included):                            │
 │  └── OU=Employees,OU=Users,OU=BIIRA,DC=ad,DC=biira,DC=online│
@@ -262,12 +262,12 @@ Okta.AdAgent.Update            Stopped Automatic OktaADAgentUpdate
 
 ![OKTA AD Agent Management Utility](../../../assets/images/screenshots/phase-3/03-agent-management.png)
 
-*Figure 3: OKTA AD Agent Management Utility displaying operational status and configuration options. Interface shows SRV1 agent in "The agent is running" status, service account configured as "OktaService@ad.biira.online" with Domain Administrators group membership warning, primary domain "ad.biira.online" with "Register" button available, and proxy settings configured for local proxy settings.*
+*Figure 3: OKTA AD Agent Management Utility displaying operational status and configuration options. Interface shows DC01 agent in "The agent is running" status, service account configured as "OktaService@ad.biira.online" with Domain Administrators group membership warning, primary domain "ad.biira.online" with "Register" button available, and proxy settings configured for local proxy settings.*
 
 **Agent Management Interface Analysis:**
 
 **Service Status Verification:**
-- **Agent Host**: SRV1 (domain controller)
+- **Agent Host**: DC01 (domain controller)
 - **Operational Status**: "The agent is running"
 - **Service Health**: Active and responsive
 
@@ -570,7 +570,7 @@ Application Layer: OKTA Directory Sync Protocol
 └── Physical Layer: Enterprise Network → Internet
 
 Communication Flow:
-srv1 (OKTA Agent) → Corporate Firewall → Internet → OKTA Cloud
+DC01 (OKTA Agent) → Corporate Firewall → Internet → OKTA Cloud
 ├── Outbound HTTPS/443 to integrator-9057042.okta.com
 ├── Authentication: OktaService service account credentials
 ├── Payload: Encrypted AD object data (users, groups, attributes)

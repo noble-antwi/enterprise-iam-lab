@@ -11,6 +11,24 @@
 
 ---
 
+## Infrastructure substrate and migration note
+
+This identity lab runs on the network substrate documented in the companion repository **[enterprise-security-homelab](https://github.com/noble-antwi/enterprise-security-homelab)** (pfSense, VLANs, managed switches, Proxmox VE). That repo is the authoritative source of truth for the network, firewall, and virtualization layer; this repo is the identity workload that runs on top of it.
+
+Current domain controller facts (2026-09-02):
+
+| Item | Current value |
+|------|---------------|
+| Hostname | **DC01** (originally deployed and screenshotted as `srv1`) |
+| Operating system | **Windows Server 2025** (earlier phases were built on Windows Server 2022) |
+| IP address | `192.168.50.2` (unchanged) |
+| VLAN | **VLAN 50 · EnterpriseLAN** (`192.168.50.0/24`) |
+| Domain | `ad.biira.online` (unchanged) |
+
+The controller was renamed `srv1` → `DC01` and the platform moved to Windows Server 2025 as part of the substrate build-out. The IP (`192.168.50.2`) and domain (`ad.biira.online`) never changed, so all OKTA agent, DNS, and directory configuration carried over intact. **Some historical screenshots in the phase guides still show the earlier `srv1` / Windows Server 2022 labels** from when they were captured; the identity and configuration they document are otherwise equivalent to the current DC01.
+
+---
+
 ## Project Vision
 
 This repository chronicles my journey building a **500-1000 user enterprise IAM environment** from scratch. The lab simulates a state-chartered commercial bank's identity infrastructure, implementing financial services regulatory standards for hybrid identity, zero-trust security, and modern access management.
@@ -88,7 +106,7 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 |  |    | Wealth Advisory | Digital Banking                     |  |
 |  |                                                             |  |
 |  |  +----------------+         +--------------------+         |  |
-|  |  |   srv1          |         |  Future:           |         |  |
+|  |  |   DC01          |         |  Future:           |         |  |
 |  |  |  (Domain        |         |  - srv2 (Replica   |         |  |
 |  |  |   Controller)   |         |    DC)             |         |  |
 |  |  |                 |         |  - CA Server       |         |  |
@@ -116,7 +134,7 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 | **Phase 5** | Advanced Security -- Network zones, conditional access, MFA policies | FFIEC authentication guidance, BSA/AML | In Progress |
 
 ### Phase 1: Foundation (COMPLETE)
-- [x] Windows Server 2022 deployment (srv1.ad.biira.online)
+- [x] Windows Server 2025 deployment (dc01.ad.biira.online)
 - [x] Active Directory Domain Services configuration
 - [x] DNS infrastructure (split-brain architecture)
 - [x] OKTA Integrator tenant provisioning
@@ -272,11 +290,11 @@ Phase 6: Microsoft Entra ID       ____________________   0%
 - **MFA Enforcement:** 100% coverage across all access scenarios
 
 ### Infrastructure Components
-- **Domain Controllers:** 1 (srv1.ad.biira.online)
+- **Domain Controllers:** 1 (dc01.ad.biira.online)
 - **OKTA AD Agents:** 1 (version 3.21.0)
 - **DNS Architecture:** Split-brain (internal ad.biira.online + public biira.online)
 - **SSO Portal:** login.biira.online
-- **Network Segmentation:** Management VLAN 50 (192.168.50.0/24)
+- **Network Segmentation:** EnterpriseLAN VLAN 50 (192.168.50.0/24)
 
 ---
 
@@ -316,7 +334,7 @@ By following this lab, you'll master:
 ## Quick Start
 
 ### Prerequisites
-- Windows Server 2022 (or 2019)
+- Windows Server 2025 (or 2019)
 - OKTA Integrator/Developer account
 - Public domain (optional but recommended)
 - VMware or Hyper-V for homelab
@@ -444,7 +462,7 @@ This repository documents a **500-1000 user enterprise IAM environment** built f
 |  +----------------------------------------------------------+ |
 |  |  Active Directory Domain: ad.biira.online                | |
 |  |  UPN Suffix: biira.online | SSO: login.biira.online      | |
-|  |  Domain Controller: srv1 (192.168.50.2)                  | |
+|  |  Domain Controller: DC01 (192.168.50.2)                  | |
 |  +----------------------------------------------------------+ |
 +--------------------------------------------------------------+
 ```
@@ -467,7 +485,7 @@ This repository documents a **500-1000 user enterprise IAM environment** built f
 
 ## Key Technologies
 
-- **Windows Server 2022** -- Domain Controller with AD DS
+- **Windows Server 2025** -- Domain Controller with AD DS
 - **Okta Workforce Identity** -- Cloud IdP with directory integration
 - **Microsoft Entra ID** -- Azure AD federation for M365
 - **PowerShell** -- Automation scripts for user/group management

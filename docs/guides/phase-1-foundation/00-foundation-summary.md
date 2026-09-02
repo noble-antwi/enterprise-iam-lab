@@ -1,13 +1,15 @@
 # Phase 1: Foundation - Active Directory & OKTA Tenant Setup
 
+> **Note on naming:** This phase was originally built and captured when the domain controller was named `srv1` and ran Windows Server 2022. The text below uses the current identity (`DC01`, Windows Server 2025); some screenshots still show the earlier `srv1` / Server 2022 labels. The IP (`192.168.50.2`) and domain (`ad.biira.online`) are unchanged. See the "Infrastructure substrate and migration note" in the root README for details.
+
 ## Executive Summary
 
-I established the foundational infrastructure for a hybrid identity management environment, implementing Active Directory Domain Services on Windows Server 2022 and provisioning an OKTA Integrator tenant for cloud identity services. The implementation includes split-brain DNS architecture, alternative UPN suffix configuration, and initial OKTA customization.
+I established the foundational infrastructure for a hybrid identity management environment, implementing Active Directory Domain Services on Windows Server 2025 and provisioning an OKTA Integrator tenant for cloud identity services. The implementation includes split-brain DNS architecture, alternative UPN suffix configuration, and initial OKTA customization.
 
 **Business Context:** This foundation serves Biira Bank's requirement for a regulated hybrid identity platform. As a state-chartered commercial bank subject to FFIEC IT examination procedures, the infrastructure must demonstrate auditable configuration management, network segmentation aligned with PCI-DSS Requirement 1, and a clear separation between internal directory services and externally-facing authentication surfaces.
 
 **Key Achievements:**
-- Deployed Windows Server 2022 as primary domain controller (srv1)
+- Deployed Windows Server 2025 as primary domain controller (DC01)
 - Established Active Directory domain: *ad.biira.online*
 - Configured split-brain DNS architecture for hybrid identity
 - Added alternative UPN suffix: biira.online for cloud SSO
@@ -20,12 +22,12 @@ I established the foundational infrastructure for a hybrid identity management e
 
 ### Server Specifications
 
-I deployed Windows Server 2022 on physical hardware to serve as the primary domain controller for the enterprise IAM lab.
+I deployed Windows Server 2025 on physical hardware to serve as the primary domain controller for the enterprise IAM lab.
 
 **Hardware Configuration:**
 - **Platform:** Physical server (repurposed desktop)
-- **Server Name:** srv1
-- **Operating System:** Windows Server 2022 Standard (Desktop Experience)
+- **Server Name:** DC01
+- **Operating System:** Windows Server 2025 Standard (Desktop Experience)
 - **RAM:** 8GB
 - **CPU:** 4 cores
 - **Storage:** 222GB
@@ -58,7 +60,7 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet 2" `
 
 ![Network Configuration](../../../assets/images/screenshots/phase-1/01-network-config-static-ip.png.png)
 
-*Figure 1: Static IP configuration showing 192.168.50.2 address assignment on srv1. Network adapter properties display manual IP configuration with subnet mask 255.255.255.0 and default gateway 192.168.50.1, establishing the foundation for domain controller network accessibility.*
+*Figure 1: Static IP configuration showing 192.168.50.2 address assignment on DC01. Network adapter properties display manual IP configuration with subnet mask 255.255.255.0 and default gateway 192.168.50.1, establishing the foundation for domain controller network accessibility.*
 
 ---
 
@@ -142,7 +144,7 @@ I implemented a split-brain DNS architecture to separate internal domain infrast
 - **Zone Type:** Active Directory-Integrated
 - **Purpose:** Internal AD domain, computer authentication, Kerberos
 - **Scope:** Homelab network only (not internet-routable)
-- **DNS Server:** srv1 (192.168.50.2)
+- **DNS Server:** DC01 (192.168.50.2)
 
 **Public DNS Domain: biira.online**
 - **DNS Provider:** Namecheap
@@ -177,7 +179,7 @@ nslookup -type=SRV _ldap._tcp.dc._msdcs.ad.biira.online
 nslookup -type=SRV _kerberos._tcp.ad.biira.online
 
 # Verify domain controller A record
-nslookup srv1.ad.biira.online
+nslookup dc01.ad.biira.online
 ```
 
 **Reverse Lookup Zone (50.168.192.in-addr.arpa):**
@@ -190,11 +192,11 @@ Add-DnsServerPrimaryZone -NetworkID "192.168.50.0/24" `
 # Add PTR record for DC
 Add-DnsServerResourceRecordPtr -ZoneName "50.168.192.in-addr.arpa" `
                                -Name "2" `
-                               -PtrDomainName "srv1.ad.biira.online"
+                               -PtrDomainName "dc01.ad.biira.online"
 
 # Verify reverse lookup
 nslookup 192.168.50.2
-# Returns: srv1.ad.biira.online
+# Returns: dc01.ad.biira.online
 ```
 
 ### DNS Forwarders
@@ -350,14 +352,14 @@ dcdiag /test:Services
 ```powershell
 # Test internal DNS resolution
 nslookup ad.biira.online
-nslookup srv1.ad.biira.online
+nslookup dc01.ad.biira.online
 
 # Test SRV records (critical for AD)
 nslookup -type=SRV _ldap._tcp.ad.biira.online
 
 # Test reverse lookup
 nslookup 192.168.50.2
-# Returns: srv1.ad.biira.online (correct)
+# Returns: dc01.ad.biira.online (correct)
 ```
 
 ### Active Directory Validation
@@ -427,7 +429,7 @@ The implemented architecture establishes the foundation for hybrid identity mana
 │         ON-PREMISES (Active Directory)          │
 │                                                 │
 │  Domain: ad.biira.online                        │
-│  Domain Controller: srv1 (192.168.50.2)         │
+│  Domain Controller: DC01 (192.168.50.2)         │
 │  UPN Suffix: biira.online                       │
 │  DNS: Split-brain configured                    │
 │  Status: Operational, validated                 │
@@ -452,7 +454,7 @@ The implemented architecture establishes the foundation for hybrid identity mana
 
 **Network:**
 - Static IP configured (192.168.50.2)
-- VLAN segmentation (Management VLAN 50)
+- VLAN segmentation (EnterpriseLAN VLAN 50)
 - DNS forwarders configured
 - Split-brain DNS operational
 
@@ -551,7 +553,7 @@ With the foundation complete, Phase 2 focuses on organizing Active Directory for
 
 I successfully established the foundational infrastructure for a hybrid identity management environment. The implementation demonstrates:
 
-- Enterprise-grade Active Directory deployment on Windows Server 2022
+- Enterprise-grade Active Directory deployment on Windows Server 2025
 - Split-brain DNS architecture for internal/external identity separation
 - Alternative UPN suffix configuration for clean cloud SSO experience
 - OKTA cloud tenant provisioning with custom branding

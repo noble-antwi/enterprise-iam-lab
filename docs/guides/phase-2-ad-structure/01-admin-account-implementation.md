@@ -690,7 +690,7 @@ With the complete Active Directory structure now in place:
 - Security groups configured for role-based provisioning
 - Service account (svc-okta-agent) ready for OKTA AD Agent
 
-**Next Phase:** Install OKTA AD Agent on srv1 and configure directory synchronization.
+**Next Phase:** Install OKTA AD Agent on DC01 and configure directory synchronization.
 
 ---
 

@@ -450,7 +450,7 @@ What Does NOT Sync:
 With the Active Directory foundation complete, Phase 3 will focus on OKTA integration:
 
 **1. OKTA AD Agent Installation**
-- Install agent on srv1 (Domain Controller)
+- Install agent on DC01 (Domain Controller)
 - Configure service account authentication (svc-okta-agent)
 - Set sync scope: `OU=Employees,OU=Users,OU=BIIRA,DC=ad,DC=biira,DC=online`
 

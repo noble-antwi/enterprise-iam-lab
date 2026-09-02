@@ -1,5 +1,5 @@
 # Create Tier 0 Domain Admin Account
-# Run this on srv1 as Domain Admin
+# Run this on DC01 as Domain Admin
 
 $domainDN = "DC=ad,DC=biira,DC=online"
 $tier0OU = "OU=Tier0-DomainAdmins,OU=Admin,OU=BIIRA,$domainDN"

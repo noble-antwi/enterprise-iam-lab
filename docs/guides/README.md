@@ -88,7 +88,7 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 |  |    | Wealth Advisory | Digital Banking                     |  |
 |  |                                                             |  |
 |  |  +----------------+         +--------------------+         |  |
-|  |  |   srv1          |         |  Future:           |         |  |
+|  |  |   DC01          |         |  Future:           |         |  |
 |  |  |  (Domain        |         |  - srv2 (Replica   |         |  |
 |  |  |   Controller)   |         |    DC)             |         |  |
 |  |  |                 |         |  - CA Server       |         |  |
@@ -116,7 +116,7 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 | **Phase 5** | Advanced Security -- Network zones, conditional access, MFA policies | FFIEC authentication guidance, BSA/AML | In Progress |
 
 ### Phase 1: Foundation (COMPLETE)
-- [x] Windows Server 2022 deployment (srv1.ad.biira.online)
+- [x] Windows Server 2025 deployment (dc01.ad.biira.online)
 - [x] Active Directory Domain Services configuration
 - [x] DNS infrastructure (split-brain architecture)
 - [x] OKTA Integrator tenant provisioning
@@ -272,11 +272,11 @@ Phase 6: Microsoft Entra ID       ____________________   0%
 - **MFA Enforcement:** 100% coverage across all access scenarios
 
 ### Infrastructure Components
-- **Domain Controllers:** 1 (srv1.ad.biira.online)
+- **Domain Controllers:** 1 (dc01.ad.biira.online)
 - **OKTA AD Agents:** 1 (version 3.21.0)
 - **DNS Architecture:** Split-brain (internal ad.biira.online + public biira.online)
 - **SSO Portal:** login.biira.online
-- **Network Segmentation:** Management VLAN 50 (192.168.50.0/24)
+- **Network Segmentation:** EnterpriseLAN VLAN 50 (192.168.50.0/24)
 
 ---
 
@@ -316,7 +316,7 @@ By following this lab, you'll master:
 ## Quick Start
 
 ### Prerequisites
-- Windows Server 2022 (or 2019)
+- Windows Server 2025 (or 2019)
 - OKTA Integrator/Developer account
 - Public domain (optional but recommended)
 - VMware or Hyper-V for homelab
