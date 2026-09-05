@@ -62,7 +62,12 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 
 ## Architecture Overview
 
-### Hybrid Identity Design
+![Biira Bank hybrid identity architecture](assets/diagrams/iam-architecture.png)
+
+*Authentication flows top to bottom. A request is evaluated against the network zones first, then against the authentication policies in priority order, where the first match decides the assurance level required. Okta is the primary identity provider; Active Directory remains the source of record for employee identity, reached by the AD Agent over outbound HTTPS only. Source: [`assets/diagrams/iam-architecture.html`](assets/diagrams/iam-architecture.html).*
+
+<details>
+<summary>Text version of the same architecture</summary>
 
 ```
 +-----------------------------------------------------------------+
@@ -119,9 +124,11 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 |  |                                                             |  |
 |  +------------------------------------------------------------+  |
 |                                                                   |
-|  Network: 192.168.50.0/24 (Management VLAN)                     |
+|  Network: 192.168.50.0/24 (EnterpriseLAN VLAN 50)               |
 +-----------------------------------------------------------------+
 ```
+
+</details>
 
 **Phase 5 Enhancement:** Network-based conditional access policies now enforce location-aware authentication requirements, with differentiated security controls for corporate versus public network access. Geographic restrictions and Tor blocking provide additional layers of defense.
 

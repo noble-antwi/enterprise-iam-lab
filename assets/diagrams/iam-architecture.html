@@ -1,0 +1,230 @@
+<!doctype html><html><head><meta charset="utf-8">
+<!--
+  Biira Bank hybrid identity architecture.
+  Source of truth for assets/diagrams/iam-architecture.png. Render with:
+    msedge --headless=new --disable-gpu --no-first-run --user-data-dir=<tmp>
+      --hide-scrollbars --virtual-time-budget=5000
+      --run-all-compositor-stages-before-draw --force-device-scale-factor=2
+      --window-size=1450,940 --screenshot=iam-architecture.png <file uri>
+
+  Brand: images/brand/README.md in the sibling enterprise-security-homelab repo.
+  Navy #08152F and cyan #2DD4E8 carry structure. The three policy outcomes use
+  reserved status hues (deny / elevated / standard) and every one carries a text
+  label, so the outcome is never colour alone.
+-->
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;}
+  svg{display:block;font-family:"Segoe UI",system-ui,Arial,sans-serif;}
+  .t{font-weight:600;}
+  .mono{font-family:"Cascadia Code",Consolas,monospace;}
+</style></head><body>
+<svg width="1440" height="928" viewBox="0 0 1440 928" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="sh" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2.2" flood-color="#94a3b8" flood-opacity="0.45"/>
+    </filter>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1B2F5E"/>
+    </marker>
+    <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0E7490"/>
+    </marker>
+    <g id="bbmark">
+      <path fill="#08152F" d="M12 20C12 14 16 10 22 10h76c6 0 10 4 10 10v54c0 29-20 48-48 58C32 122 12 103 12 74Z"/>
+      <path fill="none" stroke="#2DD4E8" stroke-width="3.4" d="M20.5 24c0-4 2.6-6.6 6.6-6.6h65.8c4 0 6.6 2.6 6.6 6.6v49c0 24.5-17 40.5-39.5 49.5C37.5 113.5 20.5 97.5 20.5 73Z"/>
+      <circle cx="60" cy="66" r="23" fill="none" stroke="#2DD4E8" stroke-width="3.4"/>
+      <line x1="70.62" y1="70.40" x2="78.02" y2="73.46" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="64.40" y1="76.62" x2="67.46" y2="84.02" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="55.60" y1="76.62" x2="52.54" y2="84.02" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="49.38" y1="70.40" x2="41.98" y2="73.46" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="49.38" y1="61.60" x2="41.98" y2="58.54" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="55.60" y1="55.38" x2="52.54" y2="47.98" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="64.40" y1="55.38" x2="67.46" y2="47.98" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <line x1="70.62" y1="61.60" x2="78.02" y2="58.54" stroke="#2DD4E8" stroke-width="3.2" stroke-linecap="round"/>
+      <circle cx="60" cy="66" r="7" fill="#7FE9F5"/>
+    </g>
+  </defs>
+
+  <rect x="0" y="0" width="1440" height="928" fill="#ffffff"/>
+
+  <!-- ===== Masthead ===== -->
+  <use href="#bbmark" transform="translate(40,14) scale(0.42)"/>
+  <text x="98" y="38" font-size="16" class="t" fill="#08152F" letter-spacing="1.6">BIIRA BANK</text>
+  <text x="99" y="53" font-size="9" fill="#5A6478" letter-spacing="2.2">IDENTITY AND ACCESS MANAGEMENT</text>
+  <text x="392" y="40" font-size="21" class="t" fill="#08152F">Hybrid Identity Architecture</text>
+  <text x="392" y="60" font-size="12" fill="#5A6478">As of 2026-09-04 · Okta as primary IdP · on-premises Active Directory · phases 1 to 4 complete, 5.1 complete</text>
+  <rect x="40" y="70" width="1390" height="2.5" fill="#08152F"/>
+  <rect x="40" y="72.5" width="1390" height="2.5" fill="#2DD4E8"/>
+
+  <!-- ================= BAND A: conditional access ================= -->
+  <rect x="40" y="92" width="1390" height="266" rx="8" fill="#F7FAFC" stroke="#1B2F5E" stroke-width="1.5"/>
+  <rect x="40" y="92" width="1390" height="28" rx="8" fill="#08152F"/>
+  <rect x="40" y="112" width="1390" height="8" fill="#08152F"/>
+  <text x="56" y="111" font-size="12" class="t" fill="#ffffff" letter-spacing="1.2">INTERNET AND CLOUD · NETWORK-BASED CONDITIONAL ACCESS (PHASE 5.1)</text>
+  <text x="1414" y="111" font-size="10" text-anchor="end" fill="#2DD4E8">FFIEC 2021 authentication guidance · BSA/AML</text>
+
+  <!-- user -->
+  <rect x="60" y="196" width="118" height="52" rx="8" fill="#ffffff" stroke="#1B2F5E" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="119" y="219" font-size="12.5" text-anchor="middle" class="t" fill="#08152F">Employee</text>
+  <text x="119" y="236" font-size="10" text-anchor="middle" fill="#5A6478">sign-in request</text>
+  <line x1="178" y1="222" x2="212" y2="222" stroke="#1B2F5E" stroke-width="1.8" marker-end="url(#ar)"/>
+
+  <!-- network zones -->
+  <rect x="216" y="136" width="416" height="200" rx="8" fill="#ffffff" stroke="#0E7490" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="232" y="158" font-size="12.5" class="t" fill="#0E7490">1 · Network zones</text>
+  <text x="232" y="174" font-size="10" fill="#5A6478">Evaluated on every request, before any policy runs</text>
+  <rect x="232" y="184" width="384" height="42" rx="6" fill="#F4FBFD" stroke="#D3DEE6"/>
+  <text x="244" y="201" font-size="11.5" class="t" fill="#08152F">Corporate network</text>
+  <text x="244" y="217" font-size="10" fill="#5A6478">IP zone · the bank's public egress ranges</text>
+  <rect x="232" y="232" width="384" height="42" rx="6" fill="#F4FBFD" stroke="#D3DEE6"/>
+  <text x="244" y="249" font-size="11.5" class="t" fill="#08152F">Allowed countries</text>
+  <text x="244" y="265" font-size="10" fill="#5A6478">Dynamic zone · country-level geographic control</text>
+  <rect x="232" y="280" width="384" height="42" rx="6" fill="#F4FBFD" stroke="#D3DEE6"/>
+  <text x="244" y="297" font-size="11.5" class="t" fill="#08152F">Tor and anonymiser blocking</text>
+  <text x="244" y="313" font-size="10" fill="#5A6478">Threat-intelligence zone · anonymous proxy denial</text>
+  <line x1="632" y1="222" x2="666" y2="222" stroke="#1B2F5E" stroke-width="1.8" marker-end="url(#ar)"/>
+  <text x="649" y="212" font-size="9.5" text-anchor="middle" fill="#5A6478">context</text>
+
+  <!-- authentication policies -->
+  <rect x="670" y="136" width="740" height="200" rx="8" fill="#ffffff" stroke="#0E7490" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="686" y="158" font-size="12.5" class="t" fill="#0E7490">2 · Authentication policies</text>
+  <text x="686" y="174" font-size="10" fill="#5A6478">First match wins, so ordering is the control. Priority 1 is evaluated first.</text>
+
+  <rect x="686" y="184" width="708" height="42" rx="6" fill="#FEF8F8" stroke="#e34948"/>
+  <text x="698" y="201" font-size="11.5" class="t" fill="#08152F">Priority 1 · Restricted countries</text>
+  <text x="698" y="217" font-size="10" fill="#5A6478">Request originates outside the allowed geography</text>
+  <rect x="1210" y="193" width="172" height="24" rx="12" fill="#e34948"/>
+  <text x="1296" y="209" font-size="11" text-anchor="middle" class="t" fill="#ffffff">DENY</text>
+
+  <rect x="686" y="232" width="708" height="42" rx="6" fill="#FEFBF4" stroke="#eda100"/>
+  <text x="698" y="249" font-size="11.5" class="t" fill="#08152F">Priority 2 · Public network</text>
+  <text x="698" y="265" font-size="10" fill="#5A6478">Allowed country, but outside the corporate IP zone</text>
+  <rect x="1210" y="241" width="172" height="24" rx="12" fill="#eda100"/>
+  <text x="1296" y="257" font-size="11" text-anchor="middle" class="t" fill="#3D2B00">HARDWARE-PROTECTED MFA</text>
+
+  <rect x="686" y="280" width="708" height="42" rx="6" fill="#F5FBF5" stroke="#008300"/>
+  <text x="698" y="297" font-size="11.5" class="t" fill="#08152F">Priority 3 · Corporate network</text>
+  <text x="698" y="313" font-size="10" fill="#5A6478">Inside the corporate IP zone</text>
+  <rect x="1210" y="289" width="172" height="24" rx="12" fill="#008300"/>
+  <text x="1296" y="305" font-size="11" text-anchor="middle" class="t" fill="#ffffff">STANDARD MFA</text>
+
+  <!-- A -> B -->
+  <line x1="740" y1="358" x2="740" y2="386" stroke="#1B2F5E" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="752" y="377" font-size="10.5" fill="#08152F">access decision</text>
+
+  <!-- ================= BAND B: Okta ================= -->
+  <rect x="40" y="390" width="1390" height="212" rx="8" fill="#F7FAFC" stroke="#1B2F5E" stroke-width="1.5"/>
+  <rect x="40" y="390" width="1390" height="28" rx="8" fill="#08152F"/>
+  <rect x="40" y="410" width="1390" height="8" fill="#08152F"/>
+  <text x="56" y="409" font-size="12" class="t" fill="#ffffff" letter-spacing="1.2">OKTA · PRIMARY IDENTITY PROVIDER</text>
+  <text x="1414" y="409" font-size="10" text-anchor="end" fill="#2DD4E8">GLBA Safeguards Rule · SOX automated controls</text>
+
+  <rect x="60" y="434" width="330" height="150" rx="8" fill="#ffffff" stroke="#1B2F5E" stroke-width="1.6" filter="url(#sh)"/>
+  <text x="76" y="458" font-size="14" class="t" fill="#08152F">Okta Universal Directory</text>
+  <text x="76" y="477" font-size="10.5" class="mono" fill="#5A6478">SSO portal: login.biira.online</text>
+  <text x="76" y="493" font-size="10.5" class="mono" fill="#5A6478">UPN suffix: biira.online</text>
+  <text x="76" y="512" font-size="10.5" fill="#5A6478">Integrator tenant · authoritative for cloud access</text>
+  <text x="76" y="532" font-size="10.5" fill="#5A6478">Expression Language drives dynamic group</text>
+  <text x="76" y="547" font-size="10.5" fill="#5A6478">assignment, for example OG-Location-Americas</text>
+  <rect x="76" y="556" width="176" height="20" rx="10" fill="#E8F6EC" stroke="#008300"/>
+  <text x="86" y="570" font-size="10" fill="#065F27">✓ Phases 3 and 4 complete</text>
+
+  <!-- apps -->
+  <rect x="410" y="434" width="470" height="150" rx="8" fill="#ffffff" stroke="#1B2F5E" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="426" y="458" font-size="12.5" class="t" fill="#08152F">Integrated applications (Phase 4)</text>
+  <text x="426" y="474" font-size="10" fill="#5A6478">Two protocols on purpose, to exercise both integration paths</text>
+  <rect x="426" y="486" width="212" height="80" rx="6" fill="#F7FAFC" stroke="#D3DEE6"/>
+  <text x="438" y="505" font-size="11.5" class="t" fill="#08152F">Dropbox Business</text>
+  <text x="438" y="522" font-size="10" fill="#0E7490">SAML 2.0 federation</text>
+  <text x="438" y="538" font-size="10" fill="#5A6478">Automated provisioning and</text>
+  <text x="438" y="552" font-size="10" fill="#5A6478">attribute mapping</text>
+  <rect x="652" y="486" width="212" height="80" rx="6" fill="#F7FAFC" stroke="#D3DEE6"/>
+  <text x="664" y="505" font-size="11.5" class="t" fill="#08152F">Box</text>
+  <text x="664" y="522" font-size="10" fill="#0E7490">SWA with password vaulting</text>
+  <text x="664" y="538" font-size="10" fill="#5A6478">For applications that do not</text>
+  <text x="664" y="552" font-size="10" fill="#5A6478">speak SAML</text>
+
+  <!-- entra planned -->
+  <rect x="900" y="434" width="240" height="150" rx="8" fill="#F8FAFC" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="916" y="458" font-size="12.5" class="t" fill="#5A6478">Microsoft Entra ID</text>
+  <text x="916" y="475" font-size="10.5" fill="#8A93A5">Planned · Phase 6</text>
+  <text x="916" y="497" font-size="10.5" fill="#5A6478">Federation from Okta for</text>
+  <text x="916" y="512" font-size="10.5" fill="#5A6478">Microsoft 365 access.</text>
+  <text x="916" y="534" font-size="10.5" fill="#5A6478">Okta stays the primary IdP;</text>
+  <text x="916" y="549" font-size="10.5" fill="#5A6478">Entra becomes a relying party.</text>
+  <line x1="880" y1="509" x2="898" y2="509" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- regulatory / status panel -->
+  <rect x="1160" y="434" width="250" height="150" rx="8" fill="#F4FBFD" stroke="#0E7490" stroke-width="1.5"/>
+  <text x="1176" y="458" font-size="12.5" class="t" fill="#0E7490">Why it is built this way</text>
+  <text x="1176" y="479" font-size="10.5" fill="#5A6478">Biira Bank is a state-chartered,</text>
+  <text x="1176" y="494" font-size="10.5" fill="#5A6478">FDIC-insured commercial bank,</text>
+  <text x="1176" y="509" font-size="10.5" fill="#5A6478">so identity decisions answer to</text>
+  <text x="1176" y="524" font-size="10.5" fill="#5A6478">named regulators rather than</text>
+  <text x="1176" y="539" font-size="10.5" fill="#5A6478">to preference.</text>
+  <text x="1176" y="562" font-size="10" class="t" fill="#08152F">GLBA · SOX · PCI-DSS v4.0</text>
+  <text x="1176" y="576" font-size="10" class="t" fill="#08152F">FFIEC · BSA/AML · SOC 2</text>
+
+  <!-- B <-> C : AD agent -->
+  <line x1="225" y1="602" x2="225" y2="634" stroke="#0E7490" stroke-width="2" marker-end="url(#arc)"/>
+  <line x1="205" y1="634" x2="205" y2="602" stroke="#0E7490" stroke-width="2" marker-end="url(#arc)"/>
+  <rect x="245" y="600" width="330" height="34" rx="6" fill="#F4FBFD" stroke="#0E7490" stroke-width="1.3"/>
+  <text x="257" y="613" font-size="10.5" class="t" fill="#0E7490">Okta AD Agent 3.21.0 · outbound TCP 443 only</text>
+  <text x="257" y="627" font-size="10" fill="#5A6478">15-minute sync · no inbound firewall rule required</text>
+
+  <!-- ================= BAND C: on premises ================= -->
+  <rect x="40" y="642" width="1390" height="196" rx="8" fill="#F7FAFC" stroke="#1B2F5E" stroke-width="1.5"/>
+  <rect x="40" y="642" width="1390" height="28" rx="8" fill="#08152F"/>
+  <rect x="40" y="662" width="1390" height="8" fill="#08152F"/>
+  <text x="56" y="661" font-size="12" class="t" fill="#ffffff" letter-spacing="1.2">ON PREMISES · ACTIVE DIRECTORY · ad.biira.online</text>
+  <text x="1414" y="661" font-size="10" text-anchor="end" fill="#2DD4E8">SOX separation of duties · FFIEC privileged access</text>
+
+  <!-- DC01 -->
+  <rect x="60" y="686" width="300" height="134" rx="8" fill="#ffffff" stroke="#4a3aa7" stroke-width="1.6" filter="url(#sh)"/>
+  <text x="76" y="710" font-size="14" class="t" fill="#08152F">★ DC01</text>
+  <text x="76" y="729" font-size="10.5" class="mono" fill="#5A6478">dc01.ad.biira.online · 192.168.50.2</text>
+  <text x="76" y="746" font-size="10.5" fill="#5A6478">Windows Server 2025 · AD DS + DNS</text>
+  <text x="76" y="763" font-size="10.5" fill="#5A6478">Split-brain DNS · single forest, single domain</text>
+  <text x="76" y="782" font-size="10" fill="#065F27">● active · dcdiag clean</text>
+  <text x="76" y="801" font-size="10" fill="#8A93A5">Planned: replica DC, AD CS issuing CA</text>
+
+  <!-- identity objects -->
+  <rect x="380" y="686" width="620" height="134" rx="8" fill="#ffffff" stroke="#1B2F5E" stroke-width="1.5" filter="url(#sh)"/>
+  <text x="396" y="710" font-size="12.5" class="t" fill="#08152F">Identity objects (Phase 2)</text>
+  <g text-anchor="middle">
+    <rect x="396" y="722" width="140" height="42" rx="6" fill="#F7FAFC" stroke="#D3DEE6"/>
+    <text x="466" y="740" font-size="15" class="t" fill="#08152F">20</text><text x="466" y="756" font-size="10" fill="#5A6478">organisational units</text>
+    <rect x="546" y="722" width="140" height="42" rx="6" fill="#F7FAFC" stroke="#D3DEE6"/>
+    <text x="616" y="740" font-size="15" class="t" fill="#08152F">35</text><text x="616" y="756" font-size="10" fill="#5A6478">accounts</text>
+    <rect x="696" y="722" width="140" height="42" rx="6" fill="#F7FAFC" stroke="#D3DEE6"/>
+    <text x="766" y="740" font-size="15" class="t" fill="#08152F">15</text><text x="766" y="756" font-size="10" fill="#5A6478">security groups</text>
+    <rect x="846" y="722" width="138" height="42" rx="6" fill="#F7FAFC" stroke="#D3DEE6"/>
+    <text x="915" y="740" font-size="15" class="t" fill="#08152F">Tier 0/1/2</text><text x="915" y="756" font-size="10" fill="#5A6478">tiered admin model</text>
+  </g>
+  <text x="396" y="784" font-size="10.5" fill="#5A6478">35 accounts = 27 employees across 6 departments + 7 administrators + 1 Okta sync service account.</text>
+  <text x="396" y="801" font-size="10.5" fill="#5A6478">Custom schema extensions carry the governance attributes Okta maps on synchronisation.</text>
+
+  <!-- substrate -->
+  <rect x="1020" y="686" width="390" height="134" rx="8" fill="#F4FBFD" stroke="#0E7490" stroke-width="1.5"/>
+  <text x="1036" y="710" font-size="12.5" class="t" fill="#0E7490">Infrastructure substrate</text>
+  <text x="1036" y="730" font-size="10.5" fill="#5A6478">DC01 sits on VLAN 50 (EnterpriseLAN) behind</text>
+  <text x="1036" y="745" font-size="10.5" fill="#5A6478">pfSense, on Proxmox-backed hardware.</text>
+  <text x="1036" y="765" font-size="10.5" fill="#5A6478">Rules ENT-01 to 04 permit only DNS, NTP, ICMP</text>
+  <text x="1036" y="780" font-size="10.5" fill="#5A6478">and outbound internet. That outbound HTTPS is</text>
+  <text x="1036" y="795" font-size="10.5" fill="#5A6478">what the Okta AD Agent needs, and nothing more.</text>
+  <text x="1036" y="813" font-size="10" class="t" fill="#08152F">Documented in enterprise-security-homelab</text>
+
+  <!-- ===== Footer ===== -->
+  <rect x="40" y="852" width="1390" height="34" rx="6" fill="#F8FAFC" stroke="#D3DEE6"/>
+  <text x="54" y="874" font-size="11" fill="#08152F">
+    <tspan class="t">Legend:</tspan>
+    <tspan dx="10" fill="#065F27">✓ complete</tspan>
+    <tspan dx="12" fill="#5A6478">dashed = planned</tspan>
+    <tspan dx="16" fill="#e34948">■ deny</tspan>
+    <tspan dx="10" fill="#8A5E00">■ elevated assurance</tspan>
+    <tspan dx="10" fill="#065F27">■ standard assurance</tspan>
+    <tspan dx="16" fill="#0E7490">Okta is the primary IdP; Active Directory remains the source of record for employee identity.</tspan>
+  </text>
+  <text x="40" y="908" font-size="9.5" fill="#8A93A5">Policy outcome is carried by the label, not the colour. Phase status: 1 to 4 complete, 5.1 complete, 5.2 to 5.5 planned, 6 planned.</text>
+</svg>
+</body></html>
