@@ -7,6 +7,8 @@
 
 The bank is **Biira Bank**, and it is the same organisation documented in the sibling repository [enterprise-security-homelab](https://github.com/noble-antwi/enterprise-security-homelab), which covers the network, segmentation and infrastructure this identity estate runs on. Both repositories share one visual identity, documented in [assets/brand](assets/brand/README.md).
 
+**Elsewhere:** project write-ups and other work at [noble-antwi.github.io](https://noble-antwi.github.io/).
+
 [![Lab Status](https://img.shields.io/badge/Status-Phase%205.1%20Complete-brightgreen)]()
 [![AD Domain](https://img.shields.io/badge/AD%20Domain-ad.biira.online-blue)]()
 [![OKTA](https://img.shields.io/badge/OKTA-Integrator%20Tenant-00297A)]()
