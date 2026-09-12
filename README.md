@@ -13,7 +13,7 @@ The bank is **Biira Bank**, and it is the same organisation documented in the si
 **Elsewhere:** project write-ups and other work at [noble-antwi.github.io](https://noble-antwi.github.io/).
 
 [![Lab Status](https://img.shields.io/badge/Status-Phase%205.1%20Complete-brightgreen)]()
-[![AD Domain](https://img.shields.io/badge/AD%20Domain-ad.biira.online-blue)]()
+[![AD Domain](https://img.shields.io/badge/AD%20Domain-corp.biirabank.com-blue)]()
 [![OKTA](https://img.shields.io/badge/OKTA-Integrator%20Tenant-00297A)]()
 [![SSO Domain](https://img.shields.io/badge/SSO-login.biira.online-orange)]()
 [![Industry](https://img.shields.io/badge/Industry-Financial%20Services-darkgreen)]()
@@ -32,7 +32,9 @@ Current domain controller facts (2026-09-02):
 | Operating system | **Windows Server 2025** (earlier phases were built on Windows Server 2022) |
 | IP address | `192.168.50.2` (unchanged) |
 | VLAN | **VLAN 50 · EnterpriseLAN** (`192.168.50.0/24`) |
-| Domain | `ad.biira.online` (unchanged) |
+| Domain | `corp.biirabank.com` (NetBIOS `CORP`), migrated 2026-09-07 |
+
+**Forest migration, 2026-09-07.** The directory moved from `ad.biira.online` to a new forest, `corp.biirabank.com` (NetBIOS `CORP`), by demote and repromote, with the organisational units, users and groups rebuilt from an export. Users sign in as `name@biirabank.com` through a UPN suffix. The phase guides below were written before that change and still name the old domain; the structure and configuration they document carried across. The full account is in the companion repository, `docs/17`.
 
 The controller was renamed `srv1` → `DC01` and the platform moved to Windows Server 2025 as part of the substrate build-out. The IP (`192.168.50.2`) and domain (`ad.biira.online`) never changed, so all OKTA agent, DNS, and directory configuration carried over intact. **Some historical screenshots in the phase guides still show the earlier `srv1` / Windows Server 2022 labels** from when they were captured; the identity and configuration they document are otherwise equivalent to the current DC01.
 
@@ -113,7 +115,7 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 |                 ON-PREMISES HOMELAB                               |
 |                                                                   |
 |  +------------------------------------------------------------+  |
-|  |  Active Directory Domain: ad.biira.online                  |  |
+|  |  Active Directory Domain: corp.biirabank.com             |  |
 |  |  UPN Suffix: biira.online                                  |  |
 |  |  SSO Portal: login.biira.online                            |  |
 |  |  Identity Consumers: Retail Banking | Commercial Banking   |  |
@@ -150,7 +152,7 @@ For the complete organization profile, see [docs/company-profile/00-company-prof
 | **Phase 5** | Advanced Security -- Network zones, conditional access, MFA policies | FFIEC authentication guidance, BSA/AML | In Progress |
 
 ### Phase 1: Foundation (COMPLETE)
-- [x] Windows Server 2025 deployment (dc01.ad.biira.online)
+- [x] Windows Server 2025 deployment (dc01.corp.biirabank.com)
 - [x] Active Directory Domain Services configuration
 - [x] DNS infrastructure (split-brain architecture)
 - [x] OKTA Integrator tenant provisioning
@@ -306,9 +308,9 @@ Phase 6: Microsoft Entra ID       ____________________   0%
 - **MFA Enforcement:** 100% coverage across all access scenarios
 
 ### Infrastructure Components
-- **Domain Controllers:** 1 (dc01.ad.biira.online)
+- **Domain Controllers:** 1 (dc01.corp.biirabank.com)
 - **OKTA AD Agents:** 1 (version 3.21.0)
-- **DNS Architecture:** Split-brain (internal ad.biira.online + public biira.online)
+- **DNS Architecture:** Separated namespaces (internal `corp.biirabank.com`, public `biirabank.com`)
 - **SSO Portal:** login.biira.online
 - **Network Segmentation:** EnterpriseLAN VLAN 50 (192.168.50.0/24)
 
@@ -376,23 +378,13 @@ By following this lab, you'll master:
 
 ---
 
-## Security & Privacy
+## Security and privacy
 
-- **No sensitive data**: All configs are sanitized examples
-- **Service account passwords**: Referenced in documentation, never committed
-- **OKTA tenant details**: Masked in screenshots and configs
-- **IP addresses**: Use your own network ranges
-- **Real-world ready**: All configurations based on financial services enterprise standards
+This is a lab for a fictional bank. Names, addresses and accounts here are invented. Passwords are never committed: the scripts prompt for them at run time. Screenshots are checked before they are added, and the working notes that record unfinished findings are kept in a private repository.
 
-### Lab vs Production
+### Lab vs production
 
-While this lab follows financial services enterprise standards, remember:
-- Homelab environments lack physical security controls
-- Not all configurations scale to 10,000+ users without optimization
-- Some features require enterprise licensing (Entra ID P2, OKTA Workforce Identity)
-- Advanced security features (PAM, advanced MFA) require additional implementation
-
----
+The patterns are enterprise ones, but the scale is a lab: one domain controller, an Okta Integrator tenant, and a handful of users. Anything that would be redundant, monitored or change-controlled in production is called out where it matters rather than implied.
 
 ## Repository Structure
 
@@ -407,16 +399,6 @@ While this lab follows financial services enterprise standards, remember:
 
 ---
 
-## Contributing
-
-This is a learning project, but feedback is welcome!
-
-- **Found an issue?** Open a GitHub issue with details
-- **Have a suggestion?** Submit a pull request with improvements
-- **Want to share your adaptation?** Fork and link back!
-- **Implementing similar lab?** Share your experience!
-
----
 
 ## Project Timeline
 
@@ -431,11 +413,7 @@ This is a learning project, but feedback is welcome!
 
 ## Author
 
-**Noble W. Antwi**
-Enterprise IAM Lab - Building regulatory-grade hybrid identity architecture for financial services
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://www.linkedin.com/in/your-profile)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/noble-antwi)
+**Noble Antwi** · [noble-antwi.github.io](https://noble-antwi.github.io/)
 
 ---
 
@@ -445,79 +423,7 @@ This project is for educational purposes. Configurations and scripts are provide
 
 ---
 
-## Acknowledgments
-
-- **OKTA** for Integrator program access
-- **Microsoft** for comprehensive Active Directory documentation
-- **Community** for inspiration and knowledge sharing
-- **Homelab Community** for architectural guidance
-
----
 
 **Last Updated:** December 2024
 **Current Phase:** 5.1 (Network-Based Conditional Access) - COMPLETE
 **Documentation Standard:** Financial Services Enterprise Grade
-
----
-
-## What Is This?
-
-This repository documents a **500-1000 user enterprise IAM environment** built from scratch. It simulates a state-chartered commercial bank's identity infrastructure with hybrid identity, zero-trust security, and modern access management -- mirroring real financial services enterprise implementations.
-
-## Architecture
-
-```
-                        +---------------------+
-                        |       OKTA          |<----> Microsoft Entra ID
-                        |   (Primary IdP)     |       (Azure AD / M365)
-                        +---------+-----------+
-                                  | OKTA AD Agent
-                                  v
-+--------------------------------------------------------------+
-|                    ON-PREMISES HOMELAB                         |
-|  +----------------------------------------------------------+ |
-|  |  Active Directory Domain: ad.biira.online                | |
-|  |  UPN Suffix: biira.online | SSO: login.biira.online      | |
-|  |  Domain Controller: DC01 (192.168.50.2)                  | |
-|  +----------------------------------------------------------+ |
-+--------------------------------------------------------------+
-```
-
-## Project Phases
-
-| Phase | Focus | Status |
-|-------|-------|--------|
-| **Phase 1** | Foundation -- Windows Server, AD DS, DNS, Okta tenant setup | Complete |
-| **Phase 2** | AD Structure -- Tiered admin model, OUs, security groups | Complete |
-| **Phase 3** | Okta Integration -- AD agent, provisioning, attribute mapping | Complete |
-| **Phase 4** | Advanced Okta -- SAML/SWA apps, group push, lifecycle management | Complete |
-| **Phase 5** | Advanced Security -- Network zones, conditional access, MFA policies | In Progress |
-
-## Quick Start
-
-1. **Review the architecture** -- See [docs/guides/README.md](docs/guides/README.md) for the full architecture overview
-2. **Follow the phases** -- Each phase has detailed implementation guides in `docs/guides/phase-X-*/`
-3. **Use the scripts** -- PowerShell automation scripts in `scripts/` for bulk operations
-
-## Key Technologies
-
-- **Windows Server 2025** -- Domain Controller with AD DS
-- **Okta Workforce Identity** -- Cloud IdP with directory integration
-- **Microsoft Entra ID** -- Azure AD federation for M365
-- **PowerShell** -- Automation scripts for user/group management
-
-## Documentation
-
-For comprehensive documentation, start with the [Implementation Guides](docs/guides/README.md) which contains:
-- Detailed architecture diagrams
-- Step-by-step configuration walkthroughs
-- Troubleshooting guides
-- Best practices and lessons learned
-
-## License
-
-This project is for educational and demonstration purposes.
-
----
-
-*Built as a learning lab to develop financial services enterprise IAM skills through practical implementation.*

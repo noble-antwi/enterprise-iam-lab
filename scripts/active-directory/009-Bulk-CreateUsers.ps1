@@ -1,3 +1,7 @@
+# The initial password is never stored in this script. It is typed once, at run time,
+# and every account created here must change it at first sign-in.
+$InitialPassword = Read-Host -AsSecureString -Prompt 'Initial password for the accounts this script creates'
+
 # Bulk user creation from CSV
 $csvPath = "C:\Scripts\users.csv"
 $domainDN = "DC=ad,DC=biira,DC=online"
@@ -29,9 +33,9 @@ foreach ($user in $users) {
                    -Title $user.Title `
                    -Department $user.Department `
                    -Path $ou `
-                   -AccountPassword (ConvertTo-SecureString "Welcome2Biira!" -AsPlainText -Force) `
+                   -AccountPassword $InitialPassword `
                    -Enabled $true `
-                   -ChangePasswordAtLogon $false
+                   -ChangePasswordAtLogon $true
         
         # Add to OKTA sync group
         Add-ADGroupMember -Identity "SG-OKTA-AllUsers" -Members $username

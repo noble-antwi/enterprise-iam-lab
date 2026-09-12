@@ -1,3 +1,7 @@
+# The initial password is never stored in this script. It is typed once, at run time,
+# and every account created here must change it at first sign-in.
+$InitialPassword = Read-Host -AsSecureString -Prompt 'Initial password for the accounts this script creates'
+
 # Create Tier 1 Server Admin Accounts
 # Run this on DC01 as Domain Admin
 
@@ -36,7 +40,7 @@ foreach ($admin in $tier1Admins) {
                    -Description "Tier 1: Server Administrator - $($admin.Title)" `
                    -Title "$($admin.Title) - Server Admin" `
                    -Path $tier1OU `
-                   -AccountPassword (ConvertTo-SecureString "Change_This_Complex_Password_123!" -AsPlainText -Force) `
+                   -AccountPassword $InitialPassword `
                    -Enabled $true `
                    -ChangePasswordAtLogon $true `
                    -PasswordNeverExpires $false
