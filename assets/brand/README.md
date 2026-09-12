@@ -14,7 +14,10 @@ python scripts/brand/build_brand.py   # in enterprise-security-homelab
 
 A vault door inside a shield. The shield is the protected boundary; the vault door is the controlled way through it. That reads for network segmentation in this repository and for authentication and authorisation in the IAM repository, which is why one mark serves both.
 
-![Biira Bank lockup](biira-bank-lockup-960.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="biira-bank-lockup-reverse-960.png">
+  <img src="biira-bank-lockup-960.png" alt="Biira Bank" width="480">
+</picture>
 
 ---
 

@@ -1,4 +1,7 @@
-<img src="assets/brand/biira-bank-lockup-960.png" alt="Biira Bank" width="380">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/biira-bank-lockup-reverse-960.png">
+  <img src="assets/brand/biira-bank-lockup-960.png" alt="Biira Bank" width="380">
+</picture>
 
 # Enterprise IAM Lab: Hybrid Identity Architecture
 
